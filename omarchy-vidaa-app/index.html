@@ -3,36 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OMARCHY TV OS // FULLSCREEN WEB BROWSER</title>
+<title>OMARCHY TV OS // CINEMATIC HOME</title>
 <link rel="manifest" href="/manifest.json">
 <style>
   :root, [data-theme="tokyonight"] {
-    --bg: #1a1b26; --bg-alt: #16161e; --bg-panel: rgba(22, 22, 30, 0.96);
+    --bg: #1a1b26; --bg-alt: #16161e; --bg-panel: rgba(22, 22, 30, 0.94);
     --fg: #c0caf5; --muted: #565f89; --accent: #7aa2f7; --accent2: #bb9af7;
     --green: #9ece6a; --amber: #e0af68; --red: #f7768e; --cyan: #7dcfff; --border: #292e42;
   }
   [data-theme="gruvbox"] {
-    --bg: #1d2021; --bg-alt: #282828; --bg-panel: rgba(40, 40, 40, 0.96);
+    --bg: #1d2021; --bg-alt: #282828; --bg-panel: rgba(40, 40, 40, 0.94);
     --fg: #ebdbb2; --muted: #928374; --accent: #fabd2f; --accent2: #d3869b;
     --green: #b8bb26; --amber: #fe8019; --red: #fb4934; --cyan: #8ec07c; --border: #3c3836;
   }
   [data-theme="catppuccin"] {
-    --bg: #11111b; --bg-alt: #1e1e2e; --bg-panel: rgba(30, 30, 46, 0.96);
+    --bg: #11111b; --bg-alt: #1e1e2e; --bg-panel: rgba(30, 30, 46, 0.94);
     --fg: #cdd6f4; --muted: #6c7086; --accent: #cba6f7; --accent2: #f5c2e7;
     --green: #a6e3a1; --amber: #fab387; --red: #f38ba8; --cyan: #89dceb; --border: #313244;
   }
   [data-theme="nord"] {
-    --bg: #242933; --bg-alt: #2e3440; --bg-panel: rgba(46, 52, 64, 0.96);
+    --bg: #242933; --bg-alt: #2e3440; --bg-panel: rgba(46, 52, 64, 0.94);
     --fg: #eceff4; --muted: #616e88; --accent: #88c0d0; --accent2: #b48ead;
     --green: #a3be8c; --amber: #ebcb8b; --red: #bf616a; --cyan: #8fbcbb; --border: #3b4252;
   }
   [data-theme="everforest"] {
-    --bg: #1e2326; --bg-alt: #272e33; --bg-panel: rgba(39, 46, 51, 0.96);
+    --bg: #1e2326; --bg-alt: #272e33; --bg-panel: rgba(39, 46, 51, 0.94);
     --fg: #d3c6aa; --muted: #7a8478; --accent: #a7c080; --accent2: #d699b6;
     --green: #a7c080; --amber: #dbbc7f; --red: #e67e80; --cyan: #83c092; --border: #374145;
   }
   [data-theme="kanagawa"] {
-    --bg: #16161d; --bg-alt: #1f1f28; --bg-panel: rgba(31, 31, 40, 0.96);
+    --bg: #16161d; --bg-alt: #1f1f28; --bg-panel: rgba(31, 31, 40, 0.94);
     --fg: #dcd7ba; --muted: #727169; --accent: #7e9cd8; --accent2: #957fb8;
     --green: #98bb6c; --amber: #ffa066; --red: #e46876; --cyan: #7fb4ca; --border: #2a2a37;
   }
@@ -43,6 +43,16 @@
     background: var(--bg); color: var(--fg);
     font-family: "JetBrains Mono", "Fira Code", monospace;
     font-size: 13px; line-height: 1.4;
+  }
+
+  /* AMBIENT BACKGROUND CANVAS */
+  #ambient-canvas {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 0; pointer-events: none; opacity: 0.35;
+  }
+
+  .waybar, .workspace, .footer-bar, #app-window-overlay {
+    position: relative; z-index: 1;
   }
 
   /* WAYBAR TOP STATUS BAR */
@@ -84,21 +94,21 @@
   }
   .workspace.active { display: grid; }
 
-  #ws-1 { grid-template-columns: 1.25fr 0.75fr; grid-template-rows: 1fr; }
+  #ws-1 { grid-template-columns: 1.35fr 0.65fr; grid-template-rows: 1fr; }
   #ws-2 { grid-template-columns: 1.3fr 0.7fr; grid-template-rows: 1fr; }
   #ws-3 { grid-template-columns: 1.15fr 0.85fr; grid-template-rows: 1fr; }
   #ws-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
 
   .tile {
     background: var(--bg-panel); border: 2px solid var(--border);
-    border-radius: 6px; display: flex; flex-direction: column; overflow: hidden;
+    border-radius: 8px; display: flex; flex-direction: column; overflow: hidden;
   }
   .tile.focused {
     border-color: var(--accent);
-    box-shadow: 0 0 18px rgba(122, 162, 247, 0.2);
+    box-shadow: 0 0 20px rgba(122, 162, 247, 0.2);
   }
   .tile-bar {
-    height: 30px; background: rgba(0, 0, 0, 0.28);
+    height: 32px; background: rgba(0, 0, 0, 0.35);
     border-bottom: 1px solid var(--border); padding: 0 12px;
     display: flex; align-items: center; justify-content: space-between;
     font-size: 12px; color: var(--muted);
@@ -106,44 +116,105 @@
   .tile.focused .tile-bar { color: var(--accent); font-weight: bold; }
   .tile-body { flex: 1; padding: 12px; overflow-y: auto; }
 
+  /* HERO SHOWCASE CARD */
+  .hero-card {
+    background: linear-gradient(135deg, rgba(122, 162, 247, 0.15) 0%, rgba(187, 154, 247, 0.08) 50%, rgba(18, 19, 28, 0.95) 100%);
+    border: 2px solid var(--accent); border-radius: 8px; padding: 16px 18px;
+    margin-bottom: 12px; position: relative; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .hero-card::before {
+    content: ""; position: absolute; top: -40px; right: -40px;
+    width: 140px; height: 140px; background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+    opacity: 0.25; pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(122, 162, 247, 0.2); color: var(--cyan);
+    border: 1px solid var(--accent); padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 6px;
+  }
+  .hero-title {
+    font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 4px;
+  }
+  .hero-desc {
+    font-size: 11px; color: var(--muted); line-height: 1.4; margin-bottom: 10px; max-width: 90%;
+  }
+  .hero-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  /* ENHANCED APP GRID & CARDS */
   .app-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 10px; margin-bottom: 12px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 8px; margin-bottom: 12px;
   }
   .app-card {
-    background: var(--bg); border: 2px solid var(--border);
-    border-radius: 6px; padding: 14px 12px; text-align: left;
-    cursor: pointer; display: flex; flex-direction: column;
-    justify-content: space-between; min-height: 74px; color: var(--fg);
-    font-family: inherit;
+    background: rgba(17, 18, 26, 0.85); backdrop-filter: blur(8px);
+    border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 10px 10px; text-align: left; cursor: pointer;
+    display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 74px; color: var(--fg); font-family: inherit;
+    transition: all 0.15s ease-out; position: relative; overflow: hidden;
   }
-  .app-card .app-name { font-size: 14px; font-weight: bold; color: var(--cyan); margin-bottom: 4px; }
-  .app-card .app-desc { font-size: 11px; color: var(--muted); }
+  .app-card-top {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;
+  }
+  .app-card-icon { font-size: 16px; }
+  .app-badge {
+    font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: 3px;
+    background: rgba(255, 255, 255, 0.08); color: var(--cyan);
+    border: 1px solid rgba(125, 207, 255, 0.25);
+  }
+  .app-card .app-name { font-size: 12px; font-weight: 700; color: var(--fg); }
+  .app-card .app-desc { font-size: 10px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   .nav-btn {
     display: inline-block; background: var(--bg);
     border: 1px solid var(--border); color: var(--fg);
-    padding: 7px 11px; margin: 2px; border-radius: 4px;
+    padding: 6px 10px; margin: 2px; border-radius: 4px;
     font-family: inherit; font-size: 12px; cursor: pointer;
   }
   .nav-btn.selected, .nav-btn:focus, .app-card.selected, .app-card:focus {
-    border-color: var(--green);
-    background: rgba(158, 206, 106, 0.2);
+    border-color: var(--accent);
+    background: rgba(122, 162, 247, 0.22);
     color: #fff; outline: none;
-    box-shadow: 0 0 12px rgba(158, 206, 106, 0.28);
+    box-shadow: 0 0 14px rgba(122, 162, 247, 0.35);
+  }
+
+  /* LIVE PULSE TICKER */
+  .pulse-ticker {
+    background: rgba(13, 14, 20, 0.9); border: 1px solid var(--border);
+    border-radius: 6px; padding: 8px 12px; display: flex; align-items: center;
+    gap: 10px; margin-top: 8px; font-size: 11px;
+  }
+  .pulse-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--red);
+    box-shadow: 0 0 8px var(--red); animation: pulse-glow 1.5s infinite;
+  }
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+  .pulse-text { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--fg); }
+  .pulse-text b { color: var(--amber); }
+
+  /* GPU SPARKLINE CANVAS */
+  #gpu-canvas-graph {
+    width: 100%; height: 44px; background: #0d0e14;
+    border: 1px solid var(--border); border-radius: 4px;
+    margin-top: 6px; margin-bottom: 8px; display: block;
   }
 
   .fastfetch {
-    display: flex; gap: 14px; margin-bottom: 10px;
+    display: flex; gap: 12px; margin-bottom: 10px;
     border-bottom: 1px solid var(--border); padding-bottom: 10px;
   }
   .ascii-logo {
-    color: var(--accent); font-size: 11px; line-height: 1.15;
+    color: var(--accent); font-size: 10px; line-height: 1.15;
     white-space: pre; font-weight: bold;
   }
-  .specs-list { font-size: 12px; flex: 1; }
+  .specs-list { font-size: 11px; flex: 1; }
   .specs-list div { margin-bottom: 3px; }
-  .specs-list b { color: var(--amber); display: inline-block; width: 112px; }
+  .specs-list b { color: var(--amber); display: inline-block; width: 105px; }
 
   .term-out {
     background: #0d0e14; border: 1px solid var(--border);
@@ -152,16 +223,16 @@
     word-break: break-word; color: var(--fg); margin-top: 8px;
   }
 
-  .meter-row { margin-bottom: 8px; }
-  .meter-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 3px; }
-  .meter-track { width: 100%; height: 10px; background: #0d0e14; border-radius: 3px; overflow: hidden; }
+  .meter-row { margin-bottom: 7px; }
+  .meter-label { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; }
+  .meter-track { width: 100%; height: 8px; background: #0d0e14; border-radius: 3px; overflow: hidden; }
   .meter-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--cyan)); transition: width 0.25s ease; }
 
   .hw-card {
     border: 1px solid var(--border); background: #101118;
-    border-radius: 4px; padding: 10px; margin-bottom: 10px;
+    border-radius: 6px; padding: 9px; margin-bottom: 8px;
   }
-  .hw-card-title { color: var(--amber); font-weight: bold; margin-bottom: 6px; font-size: 12px; }
+  .hw-card-title { color: var(--amber); font-weight: bold; margin-bottom: 5px; font-size: 11px; }
 
   .input-box {
     background: #0d0e14; border: 1px solid var(--border); color: var(--fg);
@@ -199,17 +270,12 @@
     padding: 0 14px; font-size: 13px; color: var(--fg);
   }
 
-  /* BROWSER TOOLBAR */
   #browser-toolbar {
     background: #111218; border-bottom: 1px solid var(--border);
     padding: 6px 14px; display: flex; flex-direction: column; gap: 6px;
   }
-  .browser-nav-row {
-    display: flex; align-items: center; gap: 6px;
-  }
-  .browser-bookmarks-row {
-    display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
-  }
+  .browser-nav-row { display: flex; align-items: center; gap: 6px; }
+  .browser-bookmarks-row { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
 
   .app-win-body {
     flex: 1; width: 100%; height: 100%;
@@ -229,9 +295,11 @@
 </head>
 <body data-theme="tokyonight">
 
+<!-- AMBIENT GPU PARTICLE CANVAS -->
+<canvas id="ambient-canvas"></canvas>
+
 <!-- FULLSCREEN IN-APP WEB BROWSER -->
 <div id="app-window-overlay">
-  <!-- TOP APP TITLE BAR -->
   <div class="app-win-bar" id="app-win-bar">
     <div style="display:flex;align-items:center;gap:8px;">
       <span class="distro-pill" id="app-win-pill">WEB</span>
@@ -243,17 +311,16 @@
     </div>
   </div>
 
-  <!-- BROWSER NAVIGATION & URL BAR -->
   <div id="browser-toolbar">
     <div class="browser-nav-row">
       <button class="nav-btn inapp-ctrl-btn" onclick="browserGoBack()">◀ Back</button>
       <button class="nav-btn inapp-ctrl-btn" onclick="browserGoForward()">▶ Fwd</button>
       <button class="nav-btn inapp-ctrl-btn" onclick="browserReload()">↻ Reload</button>
-      <input id="browser-url-input" class="input-box" style="flex:1;font-size:13px;padding:6px 12px;" placeholder="Enter website address (e.g. google.com, youtube.com) or search query" value="https://www.youtube.com/tv" onclick="Hisense_enableVKB && Hisense_enableVKB()">
+      <input id="browser-url-input" class="input-box" style="flex:1;font-size:13px;padding:6px 12px;" placeholder="Website address or search query" value="https://www.youtube.com/tv" onclick="Hisense_enableVKB && Hisense_enableVKB()">
       <button class="nav-btn inapp-ctrl-btn" onclick="navigateToInputUrl()">Go</button>
     </div>
     <div class="browser-bookmarks-row">
-      <span style="color:var(--muted);font-size:11px;margin-right:4px;">QUICK APPS:</span>
+      <span style="color:var(--muted);font-size:11px;margin-right:4px;">QUICK:</span>
       <button class="nav-btn inapp-ctrl-btn" onclick="browseTo('https://www.youtube.com/tv', 'YouTube TV (4K Leanback)')">📺 YouTube TV</button>
       <button class="nav-btn inapp-ctrl-btn" onclick="browseTo('https://m.youtube.com', 'YouTube Web')">▶ YouTube Web</button>
       <button class="nav-btn inapp-ctrl-btn" onclick="browseTo('https://www.google.com', 'Google Search')">🔍 Google</button>
@@ -265,7 +332,6 @@
     </div>
   </div>
 
-  <!-- FULLSCREEN WEB FRAME (100% OF SCREEN) -->
   <div class="app-win-body">
     <iframe id="browser-frame" class="app-win-frame"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
@@ -305,23 +371,44 @@
   </div>
 </div>
 
-<!-- WORKSPACE 1: WALKER APP DOCK -->
+<!-- WORKSPACE 1: WALKER APP DOCK (CINEMATIC LIVING HOME) -->
 <div class="workspace active" id="ws-1">
   <div class="tile focused">
     <div class="tile-bar">
-      <span>walker // Application Launcher &amp; Web Browser</span>
+      <span>walker // Application Launcher &amp; Living Dashboard</span>
       <span>[D-PAD + ENTER]</span>
     </div>
     <div class="tile-body">
+      <!-- HERO SHOWCASE CARD -->
+      <div class="hero-card">
+        <div class="hero-tag">FEATURED // 4K HDR 60FPS</div>
+        <div class="hero-title">YouTube TV &bull; Leanback 4K Cinema</div>
+        <div class="hero-desc">Official Smart TV interface engineered for remote D-Pad navigation, spatial audio, and borderless fullscreen viewing on your 65" panel.</div>
+        <div class="hero-actions">
+          <button class="nav-btn selected" onclick="browseTo('https://www.youtube.com/tv', 'YouTube TV', true)">▶ Launch 4K Fullscreen</button>
+          <button class="nav-btn" onclick="browseTo('https://www.youtube-nocookie.com/embed/jfKfPfyJRdk?autoplay=1', 'Lofi Radio 24/7', true)">☕ Lofi Hip Hop 24/7</button>
+          <button class="nav-btn" onclick="browseTo('https://www.youtube-nocookie.com/embed/1la40WSp10U?autoplay=1', '4K Nature', true)">🌲 4K Nature HDR</button>
+          <button class="nav-btn" onclick="browseTo('https://www.google.com', 'Google Search')">🔍 Search Web</button>
+        </div>
+      </div>
+
+      <!-- 12 APP LAUNCHER CARDS -->
       <div class="app-grid" id="app-dock-grid"></div>
 
-      <div class="hw-card">
-        <div class="hw-card-title">OPEN ANY WEBSITE OR URL</div>
+      <!-- LIVE PULSE BREAKING TICKER -->
+      <div class="pulse-ticker">
+        <div class="pulse-dot"></div>
+        <div class="pulse-text" id="pulse-text">Loading live tech pulse from Hacker News...</div>
+      </div>
+
+      <!-- QUICK URL LAUNCH BAR -->
+      <div class="hw-card" style="margin-top:10px;">
+        <div class="hw-card-title">QUICK WEB NAVIGATOR</div>
         <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;">
-          <input id="custom-app-url" class="input-box" style="flex:1;min-width:260px;" placeholder="https://... or search query" value="https://www.youtube.com/tv" onclick="Hisense_enableVKB && Hisense_enableVKB()">
-          <button class="nav-btn" onclick="launchCustomUrl()">Browse Website</button>
-          <button class="nav-btn" onclick="addCustomPin()">+ Pin to Dock</button>
-          <button class="nav-btn" onclick="resetCustomApps()">Reset Defaults</button>
+          <input id="custom-app-url" class="input-box" style="flex:1;min-width:260px;" placeholder="Enter any URL or search keywords" value="https://www.youtube.com/tv" onclick="Hisense_enableVKB && Hisense_enableVKB()">
+          <button class="nav-btn" onclick="launchCustomUrl()">Browse</button>
+          <button class="nav-btn" onclick="addCustomPin()">+ Pin Card</button>
+          <button class="nav-btn" onclick="resetCustomApps()">Reset</button>
         </div>
       </div>
     </div>
@@ -329,7 +416,7 @@
 
   <div class="tile">
     <div class="tile-bar">
-      <span>telemetry // Live Fastfetch Hardware Query</span>
+      <span>telemetry // Live Fastfetch &amp; GPU Latency</span>
       <span>[LIVE SENSORS]</span>
     </div>
     <div class="tile-body">
@@ -352,13 +439,28 @@
         </div>
       </div>
 
+      <!-- LIVE GPU LATENCY OSCILLOSCOPE GRAPH -->
       <div class="hw-card">
-        <div class="hw-card-title">LIVE QUICK CONTROLS</div>
-        <button class="nav-btn" onclick="cycleTheme()">Cycle Palette (Key 0)</button>
-        <button class="nav-btn" onclick="adjustVolume(-2)">Vol -2</button>
-        <button class="nav-btn" onclick="adjustVolume(2)">Vol +2</button>
-        <button class="nav-btn" onclick="toggleMute()">Toggle Mute</button>
-        <button class="nav-btn" onclick="refreshLiveHardware()">Sync Sensors</button>
+        <div class="hw-card-title">MALI-G52 GPU RENDER OSCILLOSCOPE (60 FPS)</div>
+        <canvas id="gpu-canvas-graph" width="280" height="44"></canvas>
+        <div class="meter-row">
+          <div class="meter-label"><span>Render Latency (WebGL)</span><span id="gpu-frame-txt">-- ms</span></div>
+          <div class="meter-track"><div class="meter-fill" id="gpu-frame-bar" style="width:0%"></div></div>
+        </div>
+        <div class="meter-row">
+          <div class="meter-label"><span>JS Heap Memory (V8)</span><span id="mem-heap-txt">-- MB</span></div>
+          <div class="meter-track"><div class="meter-fill" id="mem-heap-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <!-- QUICK HARDWARE PRESETS -->
+      <div class="hw-card">
+        <div class="hw-card-title">PANEL PRESETS (vowOS HAL)</div>
+        <button class="nav-btn" onclick="setLiveBrightnessPreset(80)">Day 80%</button>
+        <button class="nav-btn" onclick="setLiveBrightnessPreset(50)">Cinema 50%</button>
+        <button class="nav-btn" onclick="setLiveBrightnessPreset(25)">Night 25%</button>
+        <button class="nav-btn" onclick="toggleMute()">Mute</button>
+        <button class="nav-btn" onclick="cycleTheme()">Theme (0)</button>
       </div>
     </div>
   </div>
@@ -426,27 +528,14 @@
 
   <div class="tile">
     <div class="tile-bar">
-      <span>btop // Live WebGL Timing &amp; Real Telemetry</span>
+      <span>btop // Live Telemetry &amp; Remote Key Sniffer</span>
       <span>[REAL TIMING]</span>
     </div>
     <div class="tile-body">
-      <div class="meter-row">
-        <div class="meter-label"><span>WebGL Frame Render Time (GPU)</span><span id="gpu-frame-txt">-- ms</span></div>
-        <div class="meter-track"><div class="meter-fill" id="gpu-frame-bar" style="width:0%"></div></div>
+      <div class="hw-card">
+        <div class="hw-card-title">REMOTE KEY SNIFFER (LIVE TV CODES)</div>
+        <div class="term-out" id="key-sniffer-box" style="height:280px;">Press any TV remote button to sniff keyCode...</div>
       </div>
-      <div class="meter-row">
-        <div class="meter-label"><span>JS Heap Used Memory (Real)</span><span id="mem-heap-txt">-- MB</span></div>
-        <div class="meter-track"><div class="meter-fill" id="mem-heap-bar" style="width:0%"></div></div>
-      </div>
-      <div class="meter-row">
-        <div class="meter-label"><span>Panel Backlight Brightness (vowOS)</span><span id="bri-bar-txt">--%</span></div>
-        <div class="meter-track"><div class="meter-fill" id="bri-bar" style="width:0%"></div></div>
-      </div>
-      <div class="meter-row">
-        <div class="meter-label"><span>Panel Contrast (vowOS)</span><span id="con-bar-txt">--%</span></div>
-        <div class="meter-track"><div class="meter-fill" id="con-bar" style="width:0%"></div></div>
-      </div>
-      <div class="term-out" id="key-sniffer-box" style="height:150px;">Remote Key Sniffer: Press any remote button...</div>
     </div>
   </div>
 </div>
@@ -514,7 +603,7 @@
     <span class="key-hint"><kbd>ENTER</kbd> Launch</span>
     <span class="key-hint"><kbd>BACK</kbd> Exit Fullscreen / Close</span>
   </div>
-  <div id="footer-live-badge">OMARCHY BROWSER v6.0</div>
+  <div id="footer-live-badge">OMARCHY TV OS v7.0</div>
 </div>
 
 <script>
@@ -526,21 +615,144 @@ var inAppNavIndex = 0;
 var broadcastObj = null;
 var isAppWindowOpen = false;
 var isBrowserFullscreen = false;
+var gpuHistory = new Array(28).fill(16.6);
 
 var liveState = { volume: 0, brightness: 0, contrast: 0, mute: 0 };
 
 var DEFAULT_APPS = [
-  { name: "YouTube TV", desc: "Official 4K TV UI (Leanback)", url: "https://www.youtube.com/tv" },
-  { name: "YouTube Web", desc: "Full Video & Channel Browsing", url: "https://m.youtube.com" },
-  { name: "Google Search", desc: "Web Search Engine", url: "https://www.google.com" },
-  { name: "Wikipedia", desc: "World Encyclopedia", url: "https://en.m.wikipedia.org" },
-  { name: "Twitch", desc: "Live Gaming Streams", url: "https://www.twitch.tv" },
-  { name: "Hacker News", desc: "Live Tech News & Discussion", url: "https://news.ycombinator.com" },
-  { name: "Reddit", desc: "Frontpage of the Internet", url: "https://old.reddit.com" },
-  { name: "Live Broadcast", desc: "Hisense TV Tuner (OIPF)", action: "live_tv" }
+  { name: "YouTube TV", desc: "4K Leanback UI", icon: "📺", badge: "4K HDR", url: "https://www.youtube.com/tv" },
+  { name: "YouTube Web", desc: "Browse & Search", icon: "▶", badge: "WEB", url: "https://m.youtube.com" },
+  { name: "Google Search", desc: "Web Search", icon: "🔍", badge: "SEARCH", url: "https://www.google.com" },
+  { name: "Wikipedia", desc: "Encyclopedia", icon: "📖", badge: "WIKI", url: "https://en.m.wikipedia.org" },
+  { name: "Twitch", desc: "Live Streams", icon: "🟣", badge: "LIVE", url: "https://www.twitch.tv" },
+  { name: "Hacker News", desc: "Tech Stories", icon: "⚡", badge: "NEWS", url: "https://news.ycombinator.com" },
+  { name: "Reddit", desc: "Frontpage", icon: "👽", badge: "FORUM", url: "https://old.reddit.com" },
+  { name: "Plex TV", desc: "Media Server", icon: "🎥", badge: "MEDIA", url: "https://app.plex.tv/desktop" },
+  { name: "4K Cinema", desc: "Tears of Steel", icon: "🎬", badge: "FILM", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" },
+  { name: "Big Buck Bunny", desc: "Blender 4K", icon: "🐰", badge: "ANIM", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" },
+  { name: "Live Broadcast", desc: "TV Tuner", icon: "📡", badge: "DVB-T2", action: "live_tv" },
+  { name: "HAL Controls", desc: "Hardware Write", icon: "⚙️", badge: "SYSTEM", action: "ws_4" }
 ];
 
-// IN-APP FULLSCREEN WEB BROWSER
+// 1. AMBIENT GPU CANVAS (SMOOTH 60FPS BACKGROUND PARTICLES)
+function initAmbientCanvas() {
+  var cvs = document.getElementById("ambient-canvas");
+  if (!cvs) return;
+  var ctx = cvs.getContext("2d");
+  var w = cvs.width = window.innerWidth;
+  var h = cvs.height = window.innerHeight;
+
+  var stars = [];
+  var count = 35; // lightweight for Mali-G52 GPU
+  for (var i = 0; i < count; i++) {
+    stars.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: Math.random() * 1.6 + 0.6,
+      dx: (Math.random() - 0.5) * 0.35,
+      dy: (Math.random() - 0.5) * 0.35,
+      a: Math.random() * 0.7 + 0.3
+    });
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, w, h);
+    var style = getComputedStyle(document.body);
+    var color = style.getPropertyValue("--accent").trim() || "#7aa2f7";
+
+    for (var i = 0; i < count; i++) {
+      var s = stars[i];
+      s.x += s.dx; s.y += s.dy;
+      if (s.x < 0) s.x = w;
+      if (s.x > w) s.x = 0;
+      if (s.y < 0) s.y = h;
+      if (s.y > h) s.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.globalAlpha = s.a;
+      ctx.fill();
+    }
+
+    ctx.globalAlpha = 0.08;
+    ctx.strokeStyle = color;
+    for (var i = 0; i < count; i++) {
+      for (var j = i + 1; j < count; j++) {
+        var dx = stars[i].x - stars[j].x;
+        var dy = stars[i].y - stars[j].y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 100) {
+          ctx.beginPath();
+          ctx.moveTo(stars[i].x, stars[i].y);
+          ctx.lineTo(stars[j].x, stars[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    ctx.globalAlpha = 1.0;
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+}
+
+// 2. LIVE PULSE TICKER (REAL-TIME HEADLINES)
+function updateLivePulseTicker() {
+  fetch("https://hacker-news.firebaseio.com/v0/topstories.json")
+    .then(r => r.json())
+    .then(ids => fetch("https://hacker-news.firebaseio.com/v0/item/" + ids[0] + ".json"))
+    .then(r => r.json())
+    .then(item => {
+      var el = document.getElementById("pulse-text");
+      if (el && item && item.title) {
+        el.innerHTML = "<b>LIVE PULSE:</b> " + item.title + " &bull; <b>" + (item.score || 0) + " pts</b> by @" + (item.by || "anon");
+        el.onclick = function() { if (item.url) browseTo(item.url, item.title); };
+        el.style.cursor = "pointer";
+      }
+    })
+    .catch(e => {});
+}
+
+// 3. GPU LATENCY SPARKLINE OSCILLOSCOPE
+function recordGpuTime(ms) {
+  gpuHistory.push(ms);
+  gpuHistory.shift();
+  drawGpuGraph();
+}
+
+function drawGpuGraph() {
+  var cvs = document.getElementById("gpu-canvas-graph");
+  if (!cvs) return;
+  var ctx = cvs.getContext("2d");
+  var w = cvs.width;
+  var h = cvs.height;
+  ctx.clearRect(0, 0, w, h);
+
+  // grid line at 16.6ms (60 FPS threshold)
+  ctx.strokeStyle = "rgba(255,255,255,0.08)";
+  ctx.lineWidth = 1;
+  var y60 = h - (16.6 / 35.0) * h;
+  ctx.beginPath();
+  ctx.moveTo(0, y60);
+  ctx.lineTo(w, y60);
+  ctx.stroke();
+
+  // sparkline path
+  ctx.beginPath();
+  ctx.strokeStyle = "#7dcfff";
+  ctx.lineWidth = 1.8;
+  var step = w / (gpuHistory.length - 1);
+  for (var i = 0; i < gpuHistory.length; i++) {
+    var val = Math.min(35.0, gpuHistory[i]);
+    var y = h - (val / 35.0) * (h - 8) - 4;
+    var x = i * step;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+}
+
+// 4. IN-APP FULLSCREEN WEB BROWSER
 function browseTo(url, title, autoFullscreen) {
   var overlay = document.getElementById("app-window-overlay");
   var frame = document.getElementById("browser-frame");
@@ -577,8 +789,6 @@ function browseTo(url, title, autoFullscreen) {
 function setBrowserFullscreen(enable) {
   isBrowserFullscreen = enable;
   var overlay = document.getElementById("app-window-overlay");
-  var bar = document.getElementById("app-win-bar");
-  var tb = document.getElementById("browser-toolbar");
   var fsBtn = document.getElementById("btn-toggle-fullscreen");
 
   if (enable) {
@@ -637,13 +847,13 @@ function addCustomPin() {
   if (!val) return;
   var apps = getSavedApps();
   var name = val.replace(/^https?:\/\//, "").split("/")[0];
-  apps.push({ name: name, desc: val, url: val });
-  try { localStorage.setItem("omarchy_apps_browser_v6", JSON.stringify(apps)); } catch (e) {}
+  apps.push({ name: name, desc: val, icon: "🌐", badge: "PIN", url: val });
+  try { localStorage.setItem("omarchy_apps_v7", JSON.stringify(apps)); } catch (e) {}
   renderAppDock();
 }
 
 function resetCustomApps() {
-  try { localStorage.removeItem("omarchy_apps_browser_v6"); } catch (e) {}
+  try { localStorage.removeItem("omarchy_apps_v7"); } catch (e) {}
   renderAppDock();
 }
 
@@ -655,15 +865,14 @@ function launchDockApp(idx) {
   if (app.action === "ws_4") { switchWorkspace(4); return; }
 
   if (app.url) {
-    // If launching YouTube TV, automatically expand to true borderless fullscreen!
-    var autoFs = (app.url.includes("youtube.com/tv"));
+    var autoFs = (app.url.includes("youtube.com/tv") || app.url.endsWith(".mp4"));
     browseTo(app.url, app.name, autoFs);
   }
 }
 
 function getSavedApps() {
   try {
-    var r = localStorage.getItem("omarchy_apps_browser_v6");
+    var r = localStorage.getItem("omarchy_apps_v7");
     if (r) return JSON.parse(r);
   } catch (e) {}
   return DEFAULT_APPS.slice();
@@ -677,6 +886,10 @@ function renderAppDock() {
   for (var i = 0; i < apps.length; i++) {
     var a = apps[i];
     html += '<button class="app-card nav-item" onclick="launchDockApp(' + i + ')">' +
+            '<div class="app-card-top">' +
+            '<span class="app-card-icon">' + (a.icon || '📱') + '</span>' +
+            '<span class="app-badge">' + (a.badge || 'APP') + '</span>' +
+            '</div>' +
             '<div class="app-name">' + a.name + '</div>' +
             '<div class="app-desc">' + (a.desc || a.url) + '</div>' +
             '</button>';
@@ -726,16 +939,6 @@ function refreshLiveHardware() {
   document.getElementById("wb-vol").textContent = (liveState.mute ? "MUTE " : "") + liveState.volume + "%";
   document.getElementById("wb-bri").textContent = liveState.brightness + "%";
   document.getElementById("wb-con").textContent = liveState.contrast + "%";
-
-  var bb = document.getElementById("bri-bar");
-  var bt = document.getElementById("bri-bar-txt");
-  if (bb) bb.style.width = liveState.brightness + "%";
-  if (bt) bt.textContent = liveState.brightness + "%";
-
-  var cb = document.getElementById("con-bar");
-  var ct = document.getElementById("con-bar-txt");
-  if (cb) cb.style.width = liveState.contrast + "%";
-  if (ct) ct.textContent = liveState.contrast + "%";
 }
 
 function setLiveBrightness(delta) {
@@ -802,7 +1005,8 @@ function toggleMute() {
 
 function logHal(msg) {
   var el = document.getElementById("hal-output");
-  if (el) el.textContent = "[" + new Date().toLocaleTimeString() + "] " + msg + "\n" + el.textContent;
+  if (el) el.textContent = "[" + new Date().toLocaleTimeString() + "] " + msg + "
+" + el.textContent;
 }
 
 function runLiveHostCmd(cmdName) {
@@ -815,7 +1019,8 @@ function runLiveHostCmd(cmdName) {
     var dur = Math.round(performance.now() - t0);
     try {
       var res = JSON.parse(xhr.responseText);
-      logTerm("Host [" + cmdName + "] in " + dur + "ms:\n" + res.output);
+      logTerm("Host [" + cmdName + "] in " + dur + "ms:
+" + res.output);
     } catch (e) { logTerm("Error: " + e); }
   };
   xhr.send(JSON.stringify({ cmd: cmdName }));
@@ -825,7 +1030,8 @@ function fetchLivePackages() {
   logTerm("Querying http://localhost:9009/service/pkgmgr -> getInstalledPkgs ...");
   try {
     var res = window.vowOS.store.getInstalledPkgs();
-    logTerm("LIVE INSTALLED PACKAGES:\n" + JSON.stringify(res, null, 2));
+    logTerm("LIVE INSTALLED PACKAGES:
+" + JSON.stringify(res, null, 2));
   } catch (e) { logTerm("Err: " + e); }
 }
 
@@ -841,7 +1047,8 @@ function dumpLiveSensors() {
       brightness: window.vowOS && window.vowOS.tvinfo ? window.vowOS.tvinfo.getBrightness() : null,
       contrast: window.vowOS && window.vowOS.tvinfo ? window.vowOS.tvinfo.getContrast() : null
     };
-    logTerm("LIVE SENSOR DUMP:\n" + JSON.stringify(out, null, 2));
+    logTerm("LIVE SENSOR DUMP:
+" + JSON.stringify(out, null, 2));
   } catch (e) { logTerm("Err: " + e); }
 }
 
@@ -850,13 +1057,16 @@ function callLiveRpc(service, api, args) {
   out.textContent = "Querying live http://localhost:9009/service/" + service + " (" + api + ")...";
   try {
     var res = window.vowOS.service.syncExecute(service, { api: api, args: args });
-    out.textContent = "POST http://localhost:9009/service/" + service + "\n" + JSON.stringify(res, null, 2);
+    out.textContent = "POST http://localhost:9009/service/" + service + "
+" + JSON.stringify(res, null, 2);
   } catch (e) { out.textContent = "RPC Error: " + e; }
 }
 
 function logTerm(msg) {
   var el = document.getElementById("term-output");
-  if (el) el.textContent = "[omarchy@vidaa ~]$ " + msg + "\n\n" + el.textContent;
+  if (el) el.textContent = "[omarchy@vidaa ~]$ " + msg + "
+
+" + el.textContent;
 }
 
 function bindLiveBroadcast() {
@@ -917,7 +1127,9 @@ function toggleFullscreenVideo() {
 
 function logMedia(msg) {
   var el = document.getElementById("media-log");
-  if (el) el.textContent = "[" + new Date().toLocaleTimeString() + "] " + msg + "\n\n" + el.textContent;
+  if (el) el.textContent = "[" + new Date().toLocaleTimeString() + "] " + msg + "
+
+" + el.textContent;
 }
 
 function measureRealGpuFrame() {
@@ -936,6 +1148,8 @@ function measureRealGpuFrame() {
   if (txt) txt.textContent = dt.toFixed(2) + " ms (" + (dt < 16.6 ? "60 FPS" : "30 FPS") + ")";
   if (bar) bar.style.width = Math.min(100, Math.round((dt / 33.3) * 100)) + "%";
 
+  recordGpuTime(dt);
+
   if (performance && performance.memory) {
     var used = Math.round(performance.memory.usedJSHeapSize / 1048576);
     var limit = Math.round(performance.memory.jsHeapSizeLimit / 1048576);
@@ -950,7 +1164,7 @@ function applyTheme(t) {
   document.body.setAttribute("data-theme", t);
   var lbl = document.getElementById("wb-theme-name");
   if (lbl) lbl.textContent = t.toUpperCase();
-  try { localStorage.setItem("omarchy_theme_browser_v6", t); } catch (e) {}
+  try { localStorage.setItem("omarchy_theme_v7", t); } catch (e) {}
 }
 
 function cycleTheme() {
@@ -961,7 +1175,7 @@ function cycleTheme() {
 function getVisibleNavItems() {
   var ws = document.getElementById("ws-" + currentWorkspace);
   if (!ws) return [];
-  return Array.prototype.slice.call(ws.querySelectorAll(".app-card, .nav-btn"));
+  return Array.prototype.slice.call(ws.querySelectorAll(".hero-actions .nav-btn, .app-card, .hw-card .nav-btn"));
 }
 
 function updateButtonSelection() {
@@ -1018,16 +1232,15 @@ window.addEventListener("keydown", function(e) {
   var kc = e.keyCode || e.which;
 
   var kbox = document.getElementById("key-sniffer-box");
-  if (kbox) kbox.textContent = "[" + new Date().toLocaleTimeString() + "] Key: " + e.key + " (keyCode=" + kc + ")\n" + kbox.textContent.slice(0, 400);
+  if (kbox) kbox.textContent = "[" + new Date().toLocaleTimeString() + "] Key: " + e.key + " (keyCode=" + kc + ")
+" + kbox.textContent.slice(0, 400);
 
   // REMOTE BACK BUTTON (461 / 8 / 27)
   if (kc === 461 || kc === 8 || kc === 27) {
     if (isAppWindowOpen) {
       if (isBrowserFullscreen) {
-        // First BACK press exits fullscreen mode and restores address bar
         setBrowserFullscreen(false);
       } else {
-        // Second BACK press closes the browser and returns to Omarchy dock
         closeInAppWindow();
       }
       e.preventDefault();
@@ -1105,6 +1318,10 @@ setInterval(function() {
 }, 2000);
 
 setInterval(function() {
+  updateLivePulseTicker();
+}, 15000);
+
+setInterval(function() {
   var t0 = performance.now();
   var xhr = new XMLHttpRequest();
   xhr.open("GET", "/poll_cmd", true);
@@ -1133,17 +1350,19 @@ setInterval(function() {
 
 window.addEventListener("load", function() {
   try {
-    var saved = localStorage.getItem("omarchy_theme_browser_v6");
+    var saved = localStorage.getItem("omarchy_theme_v7");
     if (saved) {
       var idx = THEMES.indexOf(saved);
       if (idx !== -1) currentThemeIdx = idx;
       applyTheme(saved);
     }
   } catch (e) {}
+  initAmbientCanvas();
   renderAppDock();
   queryLiveSpecs();
   refreshLiveHardware();
   measureRealGpuFrame();
+  updateLivePulseTicker();
   updateButtonSelection();
 });
 </script>
