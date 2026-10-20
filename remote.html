@@ -222,20 +222,43 @@ function showToast(msg) {
   setTimeout(function() { t.classList.remove("show"); }, 800);
 }
 
+var urlParams = new URLSearchParams(window.location.search);
+var room = urlParams.get("room") || localStorage.getItem("omarchy_remote_room") || "omarchy_vidaa_tv";
+localStorage.setItem("omarchy_remote_room", room);
+
 function postCommand(cmdObj) {
   vibrate();
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "/api/remote_command", true);
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.onload = function() {
-    if (xhr.status === 200) {
-      document.getElementById("conn-lbl").style.color = "var(--green)";
-    }
-  };
-  xhr.onerror = function() {
-    document.getElementById("conn-lbl").style.color = "var(--red)";
-  };
-  xhr.send(JSON.stringify(cmdObj));
+  cmdObj.room = room;
+  cmdObj.timestamp = Date.now();
+  var payload = JSON.stringify(cmdObj);
+
+  // 1. Real-Time Global PubSub (instant on Vercel & Cloudflare)
+  try {
+    fetch("https://ntfy.sh/" + encodeURIComponent(room), {
+      method: "POST",
+      headers: { "Title": "RemoteCmd", "Priority": "urgent" },
+      body: payload
+    }).then(function(res) {
+      if (res.ok) {
+        var el = document.getElementById("conn-lbl");
+        if (el) { el.style.color = "var(--green)"; el.innerHTML = "<span class=\"dot\"></span> CONNECTED"; }
+      }
+    }).catch(function() {});
+  } catch(e) {}
+
+  // 2. Direct Serverless / Server Endpoint (dual fallback)
+  try {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/remote_command", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        var el = document.getElementById("conn-lbl");
+        if (el) { el.style.color = "var(--green)"; el.innerHTML = "<span class=\"dot\"></span> CONNECTED"; }
+      }
+    };
+    xhr.send(payload);
+  } catch(e) {}
 }
 
 function sendKey(kc, name) {

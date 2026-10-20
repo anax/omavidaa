@@ -21,6 +21,15 @@ export default async function handler(req, res) {
         // Convert to immediate JS execution on TV
         js: generateTvJs(body)
       };
+      const room = body.room || "omarchy_vidaa_tv";
+      try {
+        await fetch(`https://ntfy.sh/${encodeURIComponent(room)}`, {
+          method: "POST",
+          headers: { "Title": "RemoteCmd", "Priority": "urgent" },
+          body: JSON.stringify(body)
+        });
+      } catch (err) {}
+
       globalThis.__OMARCHY_CMD_QUEUE.push(cmdItem);
       res.status(200).json({ ok: true, queued: cmdItem.id });
       return;

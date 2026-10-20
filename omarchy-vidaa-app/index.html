@@ -774,12 +774,40 @@ function expandPipToMain() {
 }
 
 // 3. PHONE REMOTE QR CODE MODAL
+var OMARCHY_ROOM = localStorage.getItem("omarchy_tv_room") || "omarchy_vidaa_tv";
+localStorage.setItem("omarchy_tv_room", OMARCHY_ROOM);
+
+// REAL-TIME EVENTSOURCE RECEIVER (Works with 0 latency on Vercel & Cloudflare)
+function initRealtimeRemoteStream() {
+  try {
+    var sse = new EventSource("https://ntfy.sh/" + encodeURIComponent(OMARCHY_ROOM) + "/sse");
+    sse.onmessage = function(e) {
+      try {
+        var eventData = JSON.parse(e.data);
+        if (eventData && eventData.message) {
+          var cmd = JSON.parse(eventData.message);
+          if (cmd && typeof handleRemoteCommand === "function") {
+            handleRemoteCommand(cmd);
+          }
+        }
+      } catch (err) {}
+    };
+    sse.onerror = function() {
+      sse.close();
+      setTimeout(initRealtimeRemoteStream, 2000);
+    };
+  } catch (err) {
+    console.warn("SSE init note:", err);
+  }
+}
+initRealtimeRemoteStream();
+
 function openRemoteQrModal() {
   var modal = document.getElementById("remote-qr-modal");
   var img = document.getElementById("qr-code-img");
   var txt = document.getElementById("qr-url-text");
 
-  var remoteUrl = window.location.origin + "/remote";
+  var remoteUrl = window.location.origin + "/remote?room=" + encodeURIComponent(OMARCHY_ROOM);
   txt.textContent = remoteUrl;
   img.src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(remoteUrl);
 
