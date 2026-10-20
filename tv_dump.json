@@ -1,0 +1,1474 @@
+{
+  "timestamp": "2026-10-20T15:41:26.903Z",
+  "userAgent": "Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+  "appVersion": "5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+  "platform": "Linux armv7l",
+  "vendor": "Google Inc.",
+  "language": "en-US",
+  "languages": [
+    "en-US"
+  ],
+  "hardwareConcurrency": 4,
+  "deviceMemory": 1,
+  "screen": {
+    "width": 1920,
+    "height": 1080,
+    "availWidth": 1920,
+    "availHeight": 1080,
+    "colorDepth": 24,
+    "pixelRatio": 1.5
+  },
+  "gpu": {
+    "vendor": "WebKit",
+    "renderer": "WebKit WebGL",
+    "unmaskedVendor": "ARM",
+    "unmaskedRenderer": "Mali-G52",
+    "version": "WebGL 1.0 (OpenGL ES 2.0 Chromium)",
+    "shadingLanguage": "WebGL GLSL ES 1.0 (OpenGL ES GLSL ES 1.0 Chromium)"
+  },
+  "hisenseGetters": {
+    "Hisense_GetFirmWareVersion": "V0000.09.09A.P0930",
+    "Hisense_GetDeviceID": "861003009000024000000737jkkvjbae2itas6ztc4pr42cyqtvvzzbl",
+    "Hisense_GetBrand": "Hisense",
+    "Hisense_GetModelName": "65A53FEVS_0010",
+    "Hisense_GetCountryCode": "ARE",
+    "Hisense_GetRegion": "EM_A",
+    "Hisense_GetIPAddress": "10.45.1.219",
+    "Hisense_GetApiVersion": "3.0.1",
+    "Hisense_GetOSVersion": "U09.09",
+    "Hisense_GetVolume": 6,
+    "Hisense_GetPictureMode": 1
+  },
+  "customGlobals": {
+    "VideoPlaybackQuality": {
+      "type": "function"
+    },
+    "RemotePlayback": {
+      "type": "function"
+    },
+    "PermissionStatus": {
+      "type": "function"
+    },
+    "MathMLElement": {
+      "type": "function"
+    },
+    "Ink": {
+      "type": "function"
+    },
+    "DelegatedInkTrailPresenter": {
+      "type": "function"
+    },
+    "CropTarget": {
+      "type": "function"
+    },
+    "BrowserCaptureMediaStreamTrack": {
+      "type": "function"
+    },
+    "VideoTrackList": {
+      "type": "function"
+    },
+    "VideoTrack": {
+      "type": "function"
+    },
+    "Option": {
+      "type": "function"
+    },
+    "WebKitMutationObserver": {
+      "type": "function"
+    },
+    "WebKitCSSMatrix": {
+      "type": "function"
+    },
+    "XSLTProcessor": {
+      "type": "function"
+    },
+    "WaveShaperNode": {
+      "type": "function"
+    },
+    "VirtualKeyboardGeometryChangeEvent": {
+      "type": "function"
+    },
+    "UserActivation": {
+      "type": "function"
+    },
+    "UIEvent": {
+      "type": "function"
+    },
+    "TrustedTypePolicyFactory": {
+      "type": "function"
+    },
+    "TrustedTypePolicy": {
+      "type": "function"
+    },
+    "TrustedScriptURL": {
+      "type": "function"
+    },
+    "TrustedScript": {
+      "type": "function"
+    },
+    "TrustedHTML": {
+      "type": "function"
+    },
+    "TaskSignal": {
+      "type": "function"
+    },
+    "TaskPriorityChangeEvent": {
+      "type": "function"
+    },
+    "TaskController": {
+      "type": "function"
+    },
+    "TaskAttributionTiming": {
+      "type": "function"
+    },
+    "SubmitEvent": {
+      "type": "function"
+    },
+    "StylePropertyMapReadOnly": {
+      "type": "function"
+    },
+    "StylePropertyMap": {
+      "type": "function"
+    },
+    "StereoPannerNode": {
+      "type": "function"
+    },
+    "StaticRange": {
+      "type": "function"
+    },
+    "ShadowRoot": {
+      "type": "function"
+    },
+    "SecurityPolicyViolationEvent": {
+      "type": "function"
+    },
+    "ScriptProcessorNode": {
+      "type": "function"
+    },
+    "Scheduling": {
+      "type": "function"
+    },
+    "Scheduler": {
+      "type": "function"
+    },
+    "RadioNodeList": {
+      "type": "function"
+    },
+    "PromiseRejectionEvent": {
+      "type": "function"
+    },
+    "ProgressEvent": {
+      "type": "function"
+    },
+    "Profiler": {
+      "type": "function"
+    },
+    "PopStateEvent": {
+      "type": "function"
+    },
+    "PictureInPictureWindow": {
+      "type": "function"
+    },
+    "PictureInPictureEvent": {
+      "type": "function"
+    },
+    "PannerNode": {
+      "type": "function"
+    },
+    "PageTransitionEvent": {
+      "type": "function"
+    },
+    "OverconstrainedError": {
+      "type": "function"
+    },
+    "OscillatorNode": {
+      "type": "function"
+    },
+    "OfflineAudioContext": {
+      "type": "function"
+    },
+    "OfflineAudioCompletionEvent": {
+      "type": "function"
+    },
+    "NetworkInformation": {
+      "type": "function"
+    },
+    "LargestContentfulPaint": {
+      "type": "function"
+    },
+    "IIRFilterNode": {
+      "type": "function"
+    },
+    "HashChangeEvent": {
+      "type": "function"
+    },
+    "GainNode": {
+      "type": "function"
+    },
+    "External": {
+      "type": "function"
+    },
+    "ErrorEvent": {
+      "type": "function"
+    },
+    "DynamicsCompressorNode": {
+      "type": "function"
+    },
+    "DelayNode": {
+      "type": "function"
+    },
+    "DecompressionStream": {
+      "type": "function"
+    },
+    "DataTransferItemList": {
+      "type": "function"
+    },
+    "DataTransferItem": {
+      "type": "function"
+    },
+    "DataTransfer": {
+      "type": "function"
+    },
+    "CustomStateSet": {
+      "type": "function"
+    },
+    "CustomElementRegistry": {
+      "type": "function"
+    },
+    "CountQueuingStrategy": {
+      "type": "function"
+    },
+    "ConvolverNode": {
+      "type": "function"
+    },
+    "ConstantSourceNode": {
+      "type": "function"
+    },
+    "CompressionStream": {
+      "type": "function"
+    },
+    "CloseEvent": {
+      "type": "function"
+    },
+    "ChannelSplitterNode": {
+      "type": "function"
+    },
+    "ChannelMergerNode": {
+      "type": "function"
+    },
+    "CDATASection": {
+      "type": "function"
+    },
+    "ByteLengthQueuingStrategy": {
+      "type": "function"
+    },
+    "BiquadFilterNode": {
+      "type": "function"
+    },
+    "BeforeUnloadEvent": {
+      "type": "function"
+    },
+    "BeforeInstallPromptEvent": {
+      "type": "function"
+    },
+    "BaseAudioContext": {
+      "type": "function"
+    },
+    "AnalyserNode": {
+      "type": "function"
+    },
+    "AbstractRange": {
+      "type": "function"
+    },
+    "event": {
+      "type": "undefined",
+      "value": "undefined"
+    },
+    "offscreenBuffering": {
+      "type": "boolean",
+      "value": "true"
+    },
+    "privateStorage": {
+      "type": "object",
+      "keys": [
+        "length",
+        "clear",
+        "getItem",
+        "key",
+        "removeItem",
+        "setItem",
+        "constructor"
+      ]
+    },
+    "getDomWindowInnerHeight": {
+      "type": "function"
+    },
+    "getDomWindowInnerWidth": {
+      "type": "function"
+    },
+    "setApplicationDestroyed": {
+      "type": "function"
+    },
+    "originAgentCluster": {
+      "type": "boolean",
+      "value": "false"
+    },
+    "speechSynthesis": {
+      "type": "object",
+      "keys": [
+        "pending",
+        "speaking",
+        "paused",
+        "onvoiceschanged",
+        "cancel",
+        "getVoices",
+        "pause",
+        "resume",
+        "speak"
+      ]
+    },
+    "openDatabase": {
+      "type": "function"
+    },
+    "Atomics": {
+      "type": "object",
+      "keys": [
+        "load",
+        "store",
+        "add",
+        "sub",
+        "and",
+        "or",
+        "xor",
+        "exchange",
+        "compareExchange",
+        "isLockFree",
+        "wait",
+        "waitAsync",
+        "notify"
+      ]
+    },
+    "gc": {
+      "type": "function"
+    },
+    "CreateOipfObject": {
+      "type": "function"
+    },
+    "oipfObjectFactory": {
+      "type": "object",
+      "keys": [
+        "isObjectSupported",
+        "createVideoBroadcastObject",
+        "createVideoMpegObject",
+        "createApplicationManagerObject",
+        "createDrmAgentObject",
+        "createParentalControlManagerObject",
+        "createSearchManagerObject",
+        "createCapabilitiesObject",
+        "createConfigurationObject",
+        "createRecordingSchedulerObject",
+        "createMediaSynchroniser",
+        "createCSManager",
+        "createChannelConfig",
+        "channelConfig",
+        "createBroadcastSupervisor",
+        "broadcastSupervisor",
+        "createApplication",
+        "removeApplicationObject"
+      ]
+    },
+    "debug": {
+      "type": "function"
+    },
+    "pvr_supported": {
+      "type": "function"
+    },
+    "EnableInterDeviceSyncCallback": {
+      "type": "function"
+    },
+    "DisableInterDeviceSyncCallback": {
+      "type": "function"
+    },
+    "CSDiscoveryCallback": {
+      "type": "function"
+    },
+    "CSLaunchCallback": {
+      "type": "function"
+    },
+    "TerminalDiscoveryCallback": {
+      "type": "function"
+    },
+    "CorrelationTimestamp": {
+      "type": "function"
+    },
+    "getTVProprietaryFunctions": {
+      "type": "function"
+    },
+    "queryTVProprietaryFunction": {
+      "type": "function"
+    },
+    "invokeTVProprietaryFunction": {
+      "type": "function"
+    },
+    "opera_omi": {
+      "type": "object",
+      "keys": [
+        "addPlatformEventListener",
+        "sendPlatformMessage"
+      ]
+    },
+    "omi_platform": {
+      "type": "object",
+      "keys": [
+        "addPlatformEventListener",
+        "sendPlatformMessage"
+      ]
+    },
+    "vowOSContext": {
+      "type": "object",
+      "keys": [
+        "init",
+        "getAppIdentifier",
+        "getAppId"
+      ]
+    },
+    "Hisense": {
+      "type": "object",
+      "keys": [
+        "log",
+        "VirtualKeyBoard"
+      ]
+    },
+    "VK_EXIT": {
+      "type": "number",
+      "value": "502"
+    },
+    "VK_PLAY_PAUSE": {
+      "type": "number",
+      "value": "463"
+    },
+    "VK_GUIDE": {
+      "type": "number",
+      "value": "458"
+    },
+    "VK_CHANNELS": {
+      "type": "number",
+      "value": "501"
+    },
+    "VK_TELETEXT": {
+      "type": "number",
+      "value": "459"
+    },
+    "VK_AUDIO_TRACK": {
+      "type": "number",
+      "value": "503"
+    },
+    "VK_RECORD": {
+      "type": "object",
+      "value": "null"
+    },
+    "bizclient": {
+      "type": "undefined",
+      "value": "undefined"
+    },
+    "AvsMusic": {
+      "type": "object",
+      "keys": [
+        "init",
+        "addEventListener",
+        "sendAudioStatusMsg",
+        "sendAudioOffsetMsg",
+        "sendMsg",
+        "isAudioFileReady",
+        "getAvsAudioFileDownloadStatus",
+        "readyToGetAvsInfos",
+        "readyToGetRecognitionState",
+        "readyToCleanPlay",
+        "readyToCleanRenderPlayerInfo"
+      ]
+    },
+    "WebAssembly": {
+      "type": "object",
+      "keys": [
+        "compile",
+        "validate",
+        "instantiate",
+        "compileStreaming",
+        "instantiateStreaming",
+        "Module",
+        "Instance",
+        "Table",
+        "Memory",
+        "Global",
+        "Tag",
+        "Exception",
+        "CompileError",
+        "LinkError",
+        "RuntimeError"
+      ]
+    },
+    "GetPerfTests": {
+      "type": "function"
+    },
+    "RunPerfTest": {
+      "type": "function"
+    },
+    "PerfTestReturnValue": {
+      "type": "function"
+    },
+    "testSendProcessMessage": {
+      "type": "function"
+    },
+    "testSendSMRProcessMessage": {
+      "type": "function"
+    },
+    "cefQuery": {
+      "type": "function"
+    },
+    "cefQueryCancel": {
+      "type": "function"
+    },
+    "credentialless": {
+      "type": "boolean",
+      "value": "false"
+    },
+    "caches": {
+      "type": "object",
+      "keys": [
+        "delete",
+        "has",
+        "keys",
+        "match",
+        "open",
+        "constructor"
+      ]
+    },
+    "AbsoluteOrientationSensor": {
+      "type": "function"
+    },
+    "Accelerometer": {
+      "type": "function"
+    },
+    "BatteryManager": {
+      "type": "function"
+    },
+    "DeviceMotionEvent": {
+      "type": "function"
+    },
+    "DeviceMotionEventAcceleration": {
+      "type": "function"
+    },
+    "DeviceMotionEventRotationRate": {
+      "type": "function"
+    },
+    "DeviceOrientationEvent": {
+      "type": "function"
+    },
+    "FederatedCredential": {
+      "type": "function"
+    },
+    "GravitySensor": {
+      "type": "function"
+    },
+    "Gyroscope": {
+      "type": "function"
+    },
+    "LinearAccelerationSensor": {
+      "type": "function"
+    },
+    "MIDIAccess": {
+      "type": "function"
+    },
+    "MIDIConnectionEvent": {
+      "type": "function"
+    },
+    "MIDIInput": {
+      "type": "function"
+    },
+    "MIDIInputMap": {
+      "type": "function"
+    },
+    "MIDIMessageEvent": {
+      "type": "function"
+    },
+    "MIDIOutput": {
+      "type": "function"
+    },
+    "MIDIOutputMap": {
+      "type": "function"
+    },
+    "MIDIPort": {
+      "type": "function"
+    },
+    "OrientationSensor": {
+      "type": "function"
+    },
+    "PasswordCredential": {
+      "type": "function"
+    },
+    "RelativeOrientationSensor": {
+      "type": "function"
+    },
+    "Sanitizer": {
+      "type": "function"
+    },
+    "Sensor": {
+      "type": "function"
+    },
+    "SensorErrorEvent": {
+      "type": "function"
+    },
+    "VirtualKeyboard": {
+      "type": "function"
+    },
+    "WebTransport": {
+      "type": "function"
+    },
+    "WebTransportBidirectionalStream": {
+      "type": "function"
+    },
+    "WebTransportDatagramDuplexStream": {
+      "type": "function"
+    },
+    "WebTransportError": {
+      "type": "function"
+    },
+    "EncodedAudioChunk": {
+      "type": "function"
+    },
+    "EncodedVideoChunk": {
+      "type": "function"
+    },
+    "VideoColorSpace": {
+      "type": "function"
+    },
+    "VideoFrame": {
+      "type": "function"
+    },
+    "VideoDecoder": {
+      "type": "function"
+    },
+    "VideoEncoder": {
+      "type": "function"
+    },
+    "AuthenticatorAssertionResponse": {
+      "type": "function"
+    },
+    "AuthenticatorAttestationResponse": {
+      "type": "function"
+    },
+    "AuthenticatorResponse": {
+      "type": "function"
+    },
+    "PublicKeyCredential": {
+      "type": "function"
+    },
+    "CaptureController": {
+      "type": "function"
+    },
+    "FragmentDirective": {
+      "type": "function"
+    },
+    "IdentityCredential": {
+      "type": "function"
+    },
+    "IdleDetector": {
+      "type": "function"
+    },
+    "LaunchParams": {
+      "type": "function"
+    },
+    "LaunchQueue": {
+      "type": "function"
+    },
+    "OTPCredential": {
+      "type": "function"
+    },
+    "Presentation": {
+      "type": "function"
+    },
+    "PresentationAvailability": {
+      "type": "function"
+    },
+    "PresentationConnection": {
+      "type": "function"
+    },
+    "PresentationConnectionAvailableEvent": {
+      "type": "function"
+    },
+    "PresentationConnectionCloseEvent": {
+      "type": "function"
+    },
+    "PresentationConnectionList": {
+      "type": "function"
+    },
+    "PresentationReceiver": {
+      "type": "function"
+    },
+    "PresentationRequest": {
+      "type": "function"
+    },
+    "getScreenDetails": {
+      "type": "function"
+    },
+    "queryLocalFonts": {
+      "type": "function"
+    },
+    "showDirectoryPicker": {
+      "type": "function"
+    },
+    "showOpenFilePicker": {
+      "type": "function"
+    },
+    "showSaveFilePicker": {
+      "type": "function"
+    },
+    "GM_addStyle": {
+      "type": "function"
+    },
+    "GM_xmlhttpRequest": {
+      "type": "function"
+    },
+    "GM_openInTab": {
+      "type": "function"
+    },
+    "GM_log": {
+      "type": "function"
+    },
+    "GM_getValue": {
+      "type": "function"
+    },
+    "GM_setValue": {
+      "type": "function"
+    },
+    "GM_registerMenuCommand": {
+      "type": "function"
+    },
+    "alreadyAddEventListener": {
+      "type": "number",
+      "value": "0"
+    },
+    "Hisense_LoginWithVIDAA": {
+      "type": "function"
+    },
+    "KeyEvent": {
+      "type": "object",
+      "keys": [
+        "VK_UNSUPPORTED",
+        "VK_BACK_SPACE",
+        "VK_BACK",
+        "VK_ENTER",
+        "VK_PAUSE",
+        "VK_LEFT",
+        "VK_UP",
+        "VK_RIGHT",
+        "VK_DOWN",
+        "VK_0",
+        "VK_1",
+        "VK_2",
+        "VK_3",
+        "VK_4",
+        "VK_5",
+        "VK_6",
+        "VK_7",
+        "VK_8",
+        "VK_9",
+        "VK_RED",
+        "VK_GREEN",
+        "VK_YELLOW",
+        "VK_BLUE",
+        "VK_REWIND",
+        "VK_STOP",
+        "VK_PLAY",
+        "VK_RECORD",
+        "VK_FAST_FWD",
+        "VK_INFO",
+        "VK_GUIDE",
+        "VK_MENU"
+      ]
+    },
+    "Hisense_GetApiVersion": {
+      "type": "function",
+      "Result": "3.0.1"
+    },
+    "Hisense_GetDeviceInfo": {
+      "type": "function",
+      "Result": {
+        "chipset": "MTK9602",
+        "software_version": "V0000.09.09A.P0930",
+        "os_version": "VIDAA U09.09",
+        "api_version": "3.0.1",
+        "runtime_version": "Chromium 111",
+        "brand": "Hisense",
+        "uuid": null,
+        "region": "EM_A",
+        "capability_code": "2025011004",
+        "feature_code": "861003009000024000000737",
+        "model_name": "65A53FEVS_0010"
+      }
+    },
+    "Hisense_GetTTSInfo": {
+      "type": "function",
+      "Result": {
+        "enable": false,
+        "tts_language": "eng",
+        "tts_language_list": [
+          "eng",
+          "fre",
+          "spa"
+        ],
+        "tts_pitch": null,
+        "tts_volume": null,
+        "tts_rate": null
+      }
+    },
+    "Hisense_GetDrmInfo": {
+      "type": "function",
+      "Result": {
+        "widevine": true,
+        "playready": true,
+        "clearkey": true,
+        "marlin": false
+      }
+    },
+    "Hisense_GetDialInfo": {
+      "type": "function",
+      "Result": {
+        "enable": true,
+        "app_list": [
+          "Youtube",
+          "Youtube_Tv",
+          "Youtube_Kids",
+          "Netflix",
+          "AMAZON",
+          "catel",
+          "iplayer"
+        ]
+      }
+    },
+    "Hisense_GetNetworkInfo": {
+      "type": "function",
+      "Result": {
+        "net_status": true,
+        "net_type": "wireless",
+        "wow_enable": null,
+        "wol_enable": null,
+        "ip_address": "10.45.1.219"
+      }
+    },
+    "Hisense_GetParentControlInfo": {
+      "type": "function",
+      "Error": "ReferenceError: Hisense_GetParentControlLevel is not defined"
+    },
+    "Hisense_GetPictureInfo": {
+      "type": "function",
+      "Result": {
+        "support_4k": true,
+        "panel_resolution": "3840*2160",
+        "app_resolution": "720p",
+        "picture_mode": 1,
+        "hdr_support": {
+          "SDR": false,
+          "HDR10": true,
+          "HLG": true,
+          "HDR10Plus": false,
+          "DOVI": true
+        }
+      }
+    },
+    "Hisense_GetSoundInfo": {
+      "type": "function",
+      "Error": "ReferenceError: Hisense_GetSupportForDts is not defined"
+    },
+    "Hisense_GetChromiumVersion": {
+      "type": "function",
+      "Result": 111
+    },
+    "Hisense_GetCurrentBrowser": {
+      "type": "function",
+      "Result": "odin"
+    },
+    "Hisense_GetDeviceID": {
+      "type": "function",
+      "Result": "861003009000024000000737jkkvjbae2itas6ztc4pr42cyqtvvzzbl"
+    },
+    "Hisense_GetFirmWareVersion": {
+      "type": "function",
+      "Result": "V0000.09.09A.P0930"
+    },
+    "Hisense_GetDeviceCode": {
+      "type": "function",
+      "Result": "000000"
+    },
+    "Hisense_GetVersionStatus": {
+      "type": "function",
+      "Result": "release"
+    },
+    "Hisense_GetChipSetName": {
+      "type": "function",
+      "Result": "MTK9602"
+    },
+    "Hisense_GetSerialType": {
+      "type": "function",
+      "Result": "65A5FE"
+    },
+    "Hisense_GetAdsID": {
+      "type": "function",
+      "Result": "78744709-b92e-a404-1621-927bea085b14"
+    },
+    "Hisense_GetEulaAdEnable": {
+      "type": "function",
+      "Result": 0
+    },
+    "Hisense_GetAdTargetEnable": {
+      "type": "function",
+      "Result": 1
+    },
+    "Hisense_GetOSVersion": {
+      "type": "function",
+      "Result": "U09.09"
+    },
+    "Hisense_GetCountryCode": {
+      "type": "function",
+      "Result": "ARE"
+    },
+    "Hisense_Get4KSupportState": {
+      "type": "function",
+      "Result": true
+    },
+    "Hisense_GetNetStatus": {
+      "type": "function",
+      "Result": true
+    },
+    "Hisense_GetNetType": {
+      "type": "function",
+      "Result": "wireless"
+    },
+    "Hisense_GetWolEnable": {
+      "type": "function",
+      "Result": null
+    },
+    "Hisense_GetWowEnable": {
+      "type": "function",
+      "Result": null
+    },
+    "Hisense_GetRegion": {
+      "type": "function",
+      "Result": "EM_A"
+    },
+    "Hisense_GetPanelResolution": {
+      "type": "function",
+      "Result": "3840*2160"
+    },
+    "Hisense_GetMute": {
+      "type": "function",
+      "Result": 0
+    },
+    "Hisense_GetSubtitleStyle": {
+      "type": "function",
+      "Result": {
+        "stylemode": 0,
+        "fontstyle": 0,
+        "fontsize": 1,
+        "textcolor": 1,
+        "textopacity": 0,
+        "bgcolor": 0,
+        "bgopacity": 0,
+        "edgeeffect": 0,
+        "edgecolor": 4,
+        "windowcolor": 0,
+        "windowopacity": 0
+      }
+    },
+    "Hisense_GetIPAddress": {
+      "type": "function",
+      "Result": "10.45.1.219"
+    },
+    "Hisense_GetPictureMode": {
+      "type": "function",
+      "Result": 1
+    },
+    "Hisense_GetResolution": {
+      "type": "function",
+      "Result": "0,0,0,0"
+    },
+    "Hisense_GetMenuLanguageCode": {
+      "type": "function",
+      "Result": "eng"
+    },
+    "Hisense_GetLocaleLanguage": {
+      "type": "function",
+      "Result": "eng"
+    },
+    "Hisense_GetSubtitleStatus": {
+      "type": "function",
+      "Result": "onWhenMute"
+    },
+    "Hisense_GetHighContrastMenuStatus": {
+      "type": "function",
+      "Result": false
+    },
+    "Hisense_GetFeatureCode": {
+      "type": "function",
+      "Result": "861003009000024000000737"
+    },
+    "Hisense_GetCapabilityCode": {
+      "type": "function",
+      "Result": "2025011004"
+    },
+    "Hisense_GetIsHotelMode": {
+      "type": "function",
+      "Result": false
+    },
+    "Hisense_RegisterObserver": {
+      "type": "function"
+    },
+    "Hisense_UnregisterObserver": {
+      "type": "function"
+    },
+    "Hisense_GetBrand": {
+      "type": "function",
+      "Result": "Hisense"
+    },
+    "Hisense_GetSupportForDolbyAtmos": {
+      "type": "function",
+      "Result": false
+    },
+    "Hisense_GetUuid": {
+      "type": "function",
+      "Result": null
+    },
+    "Hisense_GetMainSoundDev": {
+      "type": "function",
+      "Result": null
+    },
+    "Hisense_GetSupportForHDR": {
+      "type": "function",
+      "Result": "HDR10+HLG+DolbyVision"
+    },
+    "Hisense_GetSupportForHDRInfo": {
+      "type": "function",
+      "Result": {
+        "SDR": false,
+        "HDR10": true,
+        "HLG": true,
+        "HDR10Plus": false,
+        "DOVI": true
+      }
+    },
+    "Hisense_GetPlayerFeatureInfo": {
+      "type": "function",
+      "Result": "009000000.VD9602O_GL"
+    },
+    "Hisense_GetModelName": {
+      "type": "function",
+      "Result": "65A53FEVS_0010"
+    },
+    "Hisense_GetTunerSupport": {
+      "type": "function",
+      "Result": 1
+    },
+    "Hisense_GetTvLogo": {
+      "type": "function",
+      "Result": "his"
+    },
+    "Hisense_GetTTSEnable": {
+      "type": "function",
+      "Result": false
+    },
+    "Hisense_GetTTSLanguage": {
+      "type": "function",
+      "Result": "eng"
+    },
+    "Hisense_GetTTSPitch": {
+      "type": "function",
+      "Result": null
+    },
+    "Hisense_GetTTSVolume": {
+      "type": "function",
+      "Result": null
+    },
+    "Hisense_GetTTSRate": {
+      "type": "function",
+      "Result": null
+    },
+    "Hisense_GetTimeZone": {
+      "type": "function",
+      "Result": 14400
+    },
+    "Hisense_GetVolume": {
+      "type": "function",
+      "Result": 6
+    },
+    "Hisense_GetVolumeType": {
+      "type": "function",
+      "Result": 0
+    },
+    "Hisense_GetMenuScheme": {
+      "type": "function",
+      "Result": 0
+    },
+    "Hisense_GetMenuTransparecy": {
+      "type": "function",
+      "Result": 1
+    },
+    "Hisense_GetVolumeBarMode": {
+      "type": "function",
+      "Result": 0
+    },
+    "Hisense_GetVolumeBarVisible": {
+      "type": "function",
+      "Result": 0
+    },
+    "Hisense_GetParentControlEnabled": {
+      "type": "function",
+      "Result": null
+    },
+    "Hisense_GetBlockStartTime": {
+      "type": "function",
+      "Result": null
+    },
+    "Hisense_GetBlockEndTime": {
+      "type": "function",
+      "Result": null
+    },
+    "Hisense_GetBlockTimeWeekly": {
+      "type": "function",
+      "Result": null
+    },
+    "Hisense_setStartBandwidth": {
+      "type": "function"
+    },
+    "Hisense_disableVKB": {
+      "type": "function"
+    },
+    "Hisense_enableVKB": {
+      "type": "function"
+    },
+    "Hisense_SetRemoteKeyboard": {
+      "type": "function"
+    },
+    "Hisense_SupportAppConfig": {
+      "type": "function"
+    },
+    "VOS_GetAppCapability": {
+      "type": "function"
+    },
+    "vowOS": {
+      "type": "object",
+      "keys": [
+        "service",
+        "tvinfo",
+        "store"
+      ]
+    },
+    "TvInfo_getParam": {
+      "type": "function"
+    },
+    "TvInfo_setParam": {
+      "type": "function"
+    },
+    "TvInfo_getCurrentParam": {
+      "type": "function"
+    },
+    "TvInfo_setParamObserver": {
+      "type": "function"
+    },
+    "TvInfo_clearParamObserver": {
+      "type": "function"
+    },
+    "TvInfo_writeTvRunLog": {
+      "type": "function"
+    },
+    "HiUtils_createRequest": {
+      "type": "function"
+    },
+    "VK_UNSUPPORTED": {
+      "type": "object",
+      "value": "null"
+    },
+    "VK_BACK_SPACE": {
+      "type": "number",
+      "value": "8"
+    },
+    "VK_BACK": {
+      "type": "number",
+      "value": "461"
+    },
+    "VK_ENTER": {
+      "type": "number",
+      "value": "13"
+    },
+    "VK_PAUSE": {
+      "type": "number",
+      "value": "19"
+    },
+    "VK_LEFT": {
+      "type": "number",
+      "value": "37"
+    },
+    "VK_UP": {
+      "type": "number",
+      "value": "38"
+    },
+    "VK_RIGHT": {
+      "type": "number",
+      "value": "39"
+    },
+    "VK_DOWN": {
+      "type": "number",
+      "value": "40"
+    },
+    "VK_0": {
+      "type": "number",
+      "value": "48"
+    },
+    "VK_1": {
+      "type": "number",
+      "value": "49"
+    },
+    "VK_2": {
+      "type": "number",
+      "value": "50"
+    },
+    "VK_3": {
+      "type": "number",
+      "value": "51"
+    },
+    "VK_4": {
+      "type": "number",
+      "value": "52"
+    },
+    "VK_5": {
+      "type": "number",
+      "value": "53"
+    },
+    "VK_6": {
+      "type": "number",
+      "value": "54"
+    },
+    "VK_7": {
+      "type": "number",
+      "value": "55"
+    },
+    "VK_8": {
+      "type": "number",
+      "value": "56"
+    },
+    "VK_9": {
+      "type": "number",
+      "value": "57"
+    },
+    "VK_RED": {
+      "type": "number",
+      "value": "403"
+    },
+    "VK_GREEN": {
+      "type": "number",
+      "value": "404"
+    },
+    "VK_YELLOW": {
+      "type": "number",
+      "value": "405"
+    },
+    "VK_BLUE": {
+      "type": "number",
+      "value": "406"
+    },
+    "VK_REWIND": {
+      "type": "number",
+      "value": "412"
+    },
+    "VK_STOP": {
+      "type": "number",
+      "value": "413"
+    },
+    "VK_PLAY": {
+      "type": "number",
+      "value": "415"
+    },
+    "VK_FAST_FWD": {
+      "type": "number",
+      "value": "417"
+    },
+    "VK_TRACK_PREV": {
+      "type": "object",
+      "value": "null"
+    },
+    "VK_TRACK_NEXT": {
+      "type": "object",
+      "value": "null"
+    },
+    "VK_INFO": {
+      "type": "object",
+      "value": "null"
+    },
+    "VK_SUBTITLE": {
+      "type": "object",
+      "value": "null"
+    },
+    "VK_MENU": {
+      "type": "object",
+      "value": "null"
+    },
+    "VK_CHANNEL_UP": {
+      "type": "number",
+      "value": "427"
+    },
+    "VK_CHANNEL_DOWN": {
+      "type": "number",
+      "value": "428"
+    },
+    "VK_VOLUME_UP": {
+      "type": "object",
+      "value": "null"
+    },
+    "VK_VOLUME_DOWN": {
+      "type": "object",
+      "value": "null"
+    },
+    "VK_MUTE": {
+      "type": "object",
+      "value": "null"
+    },
+    "KEY_BACK_SPACE": {
+      "type": "number",
+      "value": "8"
+    },
+    "KEY_BACK": {
+      "type": "number",
+      "value": "8"
+    },
+    "KEY_RETRUN": {
+      "type": "number",
+      "value": "8"
+    },
+    "KEY_ENTER": {
+      "type": "number",
+      "value": "13"
+    },
+    "KEY_PAUSE": {
+      "type": "number",
+      "value": "19"
+    },
+    "KEY_LEFT": {
+      "type": "number",
+      "value": "37"
+    },
+    "KEY_UP": {
+      "type": "number",
+      "value": "38"
+    },
+    "KEY_RIGHT": {
+      "type": "number",
+      "value": "39"
+    },
+    "KEY_DOWN": {
+      "type": "number",
+      "value": "40"
+    },
+    "KEY_0": {
+      "type": "number",
+      "value": "48"
+    },
+    "KEY_1": {
+      "type": "number",
+      "value": "49"
+    },
+    "KEY_2": {
+      "type": "number",
+      "value": "50"
+    },
+    "KEY_3": {
+      "type": "number",
+      "value": "51"
+    },
+    "KEY_4": {
+      "type": "number",
+      "value": "52"
+    },
+    "KEY_5": {
+      "type": "number",
+      "value": "53"
+    },
+    "KEY_6": {
+      "type": "number",
+      "value": "54"
+    },
+    "KEY_7": {
+      "type": "number",
+      "value": "55"
+    },
+    "KEY_8": {
+      "type": "number",
+      "value": "56"
+    },
+    "KEY_9": {
+      "type": "number",
+      "value": "57"
+    },
+    "KEY_RED": {
+      "type": "number",
+      "value": "403"
+    },
+    "KEY_GREEN": {
+      "type": "number",
+      "value": "404"
+    },
+    "KEY_YELLOW": {
+      "type": "number",
+      "value": "405"
+    },
+    "KEY_BLUE": {
+      "type": "number",
+      "value": "406"
+    },
+    "KEY_REWIND": {
+      "type": "number",
+      "value": "412"
+    },
+    "KEY_STOP": {
+      "type": "number",
+      "value": "413"
+    },
+    "KEY_PLAY": {
+      "type": "number",
+      "value": "415"
+    },
+    "KEY_FAST_FWD": {
+      "type": "number",
+      "value": "417"
+    },
+    "httpRequest": {
+      "type": "object",
+      "keys": [
+        "onreadystatechange",
+        "readyState",
+        "timeout",
+        "withCredentials",
+        "upload",
+        "responseURL",
+        "status",
+        "statusText",
+        "responseType",
+        "response",
+        "responseText",
+        "responseXML",
+        "UNSENT",
+        "OPENED",
+        "HEADERS_RECEIVED",
+        "LOADING",
+        "DONE",
+        "abort",
+        "getAllResponseHeaders",
+        "getResponseHeader",
+        "open",
+        "overrideMimeType",
+        "send",
+        "setRequestHeader",
+        "constructor"
+      ]
+    }
+  },
+  "tv_ip": "127.0.0.1"
+}

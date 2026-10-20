@@ -1,0 +1,11 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Temporary / command queue
+cmd_queue.json
+.DS_Store
+
+# Logs
+*.log

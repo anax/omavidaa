@@ -1,0 +1,23 @@
+{
+  "id": "org.omarchy.tvos",
+  "version": "6.0.0",
+  "vendor": "Omarchy",
+  "type": "web",
+  "main": "index.html",
+  "title": "Omarchy TV OS",
+  "icon": "icon.png",
+  "largeIcon": "icon_large.png",
+  "bgImage": "thumbnail.png",
+  "splashBackground": "#1a1b26",
+  "resolution": "1920x1080",
+  "requiredVersion": "3.0.0",
+  "transparent": false,
+  "supportPreload": true,
+  "supportMemory": "1G",
+  "trustLevel": "trusted",
+  "permissions": [
+    "network",
+    "media",
+    "tv.service"
+  ]
+}

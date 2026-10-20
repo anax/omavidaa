@@ -1,0 +1,25 @@
+{
+  "name": "Omarchy TV OS",
+  "short_name": "Omarchy",
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "background_color": "#1a1b26",
+  "theme_color": "#7aa2f7",
+  "icons": [
+    {
+      "src": "icon_small.png",
+      "sizes": "80x80",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon_large.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
