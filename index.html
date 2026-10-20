@@ -321,100 +321,147 @@
   }
   video, #oipf-broadcast-container { width: 100%; height: 100%; }
 
-  /* CLEAN HOME STYLING */
+  /* CLEAN HOME STYLING - ANTI-CROP VIEWPORT */
   #ws-1 {
     grid-template-columns: 1fr !important;
-    max-width: 1360px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 16px 24px;
-    height: calc(100vh - 58px);
+    padding: 10px 24px !important;
+    height: calc(100vh - 46px) !important;
+    overflow: hidden !important;
+    box-sizing: border-box;
   }
   .home-tile {
     border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(18, 19, 26, 0.82);
+    background: rgba(18, 19, 26, 0.85);
     backdrop-filter: blur(20px);
-    border-radius: 14px;
-    overflow-y: auto;
-  }
-  .home-body {
-    padding: 20px 24px !important;
+    border-radius: 12px;
+    overflow: hidden !important;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  .home-body {
+    padding: 14px 18px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px !important;
+    overflow: hidden !important;
+    height: 100%;
+    box-sizing: border-box;
   }
   .clean-hero {
-    background: linear-gradient(135deg, rgba(122, 162, 247, 0.12) 0%, rgba(187, 154, 247, 0.05) 45%, rgba(17, 18, 25, 0.95) 100%) !important;
+    background: linear-gradient(135deg, rgba(122, 162, 247, 0.14) 0%, rgba(187, 154, 247, 0.06) 45%, rgba(17, 18, 25, 0.96) 100%) !important;
     border: 1.5px solid rgba(122, 162, 247, 0.35) !important;
-    border-radius: 12px !important;
-    padding: 20px 24px !important;
+    border-radius: 10px !important;
+    padding: 12px 16px !important;
+    margin: 0 !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+    flex-shrink: 0;
+  }
+  .clean-hero .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(122, 162, 247, 0.2);
+    color: var(--cyan);
+    border: 1px solid var(--accent);
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-size: 10px !important;
+    font-weight: 700;
+    letter-spacing: 0.5px;
     margin-bottom: 4px !important;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
   }
   .clean-hero .hero-title {
-    font-size: 20px !important;
+    font-size: 16px !important;
     font-weight: 800 !important;
-    letter-spacing: -0.3px;
-    margin-bottom: 6px !important;
+    color: #fff;
+    margin-bottom: 4px !important;
+    line-height: 1.3;
   }
   .clean-hero .hero-desc {
-    font-size: 13px !important;
-    max-width: 85% !important;
-    line-height: 1.5 !important;
-    margin-bottom: 14px !important;
+    font-size: 12px !important;
+    color: var(--muted);
+    line-height: 1.4 !important;
+    margin-bottom: 10px !important;
+    max-width: 90% !important;
+  }
+  .clean-hero .hero-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .clean-hero .hero-actions .nav-btn {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+    border-radius: 6px !important;
   }
   .app-shelf-header {
-    font-size: 11px;
+    font-size: 10px !important;
     font-weight: 700;
     color: var(--muted);
     letter-spacing: 1px;
-    margin-top: 4px;
+    margin: 0 !important;
+    flex-shrink: 0;
   }
   .clean-grid {
     grid-template-columns: repeat(4, 1fr) !important;
-    gap: 12px !important;
-    margin-bottom: 6px !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    flex: 1;
+    display: grid !important;
+    align-content: stretch;
   }
   .clean-grid .app-card {
-    min-height: 84px !important;
-    padding: 12px 14px !important;
+    min-height: 64px !important;
+    padding: 8px 12px !important;
     background: rgba(26, 27, 38, 0.75) !important;
     border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
-    border-radius: 10px !important;
+    border-radius: 8px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
   }
   .clean-grid .app-card:hover, .clean-grid .app-card.selected, .clean-grid .app-card:focus {
     border-color: var(--accent) !important;
-    background: rgba(122, 162, 247, 0.18) !important;
+    background: rgba(122, 162, 247, 0.2) !important;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(122, 162, 247, 0.25) !important;
+    box-shadow: 0 4px 16px rgba(122, 162, 247, 0.3) !important;
   }
   .clean-grid .app-card .app-name {
-    font-size: 13px !important;
+    font-size: 12px !important;
     font-weight: 700 !important;
   }
   .clean-grid .app-card .app-desc {
-    font-size: 11px !important;
+    font-size: 10px !important;
     margin-top: 2px !important;
+    color: var(--muted);
   }
   .clean-search-card {
     background: rgba(17, 18, 26, 0.6);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 16px;
-    margin-top: 2px;
+    border-radius: 8px;
+    padding: 6px 12px !important;
+    margin: 0 !important;
+    flex-shrink: 0;
+    box-sizing: border-box;
   }
   .clean-input {
     flex: 1;
     background: rgba(0, 0, 0, 0.35) !important;
     border: 1px solid var(--border) !important;
-    padding: 10px 16px !important;
-    border-radius: 8px !important;
-    font-size: 13px !important;
+    padding: 8px 14px !important;
+    border-radius: 6px !important;
+    font-size: 12px !important;
     color: var(--fg) !important;
   }
   .clean-input:focus {
     border-color: var(--accent) !important;
   }
-
 </style>
 </head>
 <body data-theme="tokyonight">
@@ -1434,7 +1481,7 @@ function updateButtonSelection() {
   for (var i = 0; i < items.length; i++) {
     if (i === navIndex) {
       items[i].classList.add("selected");
-      items[i].focus();
+      try { items[i].focus({ preventScroll: true }); } catch (e) { items[i].focus(); }
     } else {
       items[i].classList.remove("selected");
     }
@@ -1457,7 +1504,7 @@ function updateInAppButtonSelection() {
   for (var i = 0; i < items.length; i++) {
     if (i === inAppNavIndex) {
       items[i].classList.add("selected");
-      items[i].focus();
+      try { items[i].focus({ preventScroll: true }); } catch (e) { items[i].focus(); }
     } else {
       items[i].classList.remove("selected");
     }
@@ -1465,6 +1512,8 @@ function updateInAppButtonSelection() {
 }
 
 function switchWorkspace(n) {
+  var ht = document.querySelector(".home-tile"); if (ht) ht.scrollTop = 0;
+  var hb = document.querySelector(".home-body"); if (hb) hb.scrollTop = 0;
   if (isAppWindowOpen) closeInAppWindow();
   currentWorkspace = n;
   for (var i = 1; i <= 4; i++) {
