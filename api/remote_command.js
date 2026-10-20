@@ -35,21 +35,16 @@ export default async function handler(req, res) {
 
 function generateTvJs(cmd) {
   if (cmd.type === "key") {
-    return `window.dispatchEvent(new KeyboardEvent('keydown', { keyCode: ${cmd.keyCode}, bubbles: true }))`;
+    return `if (typeof handleKeycodeDirect === 'function') { handleKeycodeDirect(${cmd.keyCode}); } else { try { var e = document.createEvent('Events'); e.initEvent('keydown', true, true); e.keyCode = ${cmd.keyCode}; e.which = ${cmd.keyCode}; window.dispatchEvent(e); } catch(x) {} }`;
   }
   if (cmd.type === "action") {
-    if (cmd.action === "screen_split") return `toggleDualScreen(true)`;
-    if (cmd.action === "screen_single") return `toggleDualScreen(false)`;
-    if (cmd.action === "screen_pip") return `togglePipMode()`;
+    return `if (typeof handleRemoteCommand === 'function') { handleRemoteCommand(${JSON.stringify(cmd)}); }`;
   }
   if (cmd.type === "launch" || cmd.type === "browse") {
-    return `browseTo(${JSON.stringify(cmd.url)}, ${JSON.stringify(cmd.title || cmd.url)})`;
+    return `if (typeof browseTo === 'function') { browseTo(${JSON.stringify(cmd.url)}, ${JSON.stringify(cmd.title || cmd.url)}); }`;
   }
   if (cmd.type === "hal") {
-    if (cmd.param === "brightness") return `setLiveBrightness(${cmd.val})`;
-    if (cmd.param === "brightness_preset") return `setLiveBrightnessPreset(${cmd.val})`;
-    if (cmd.param === "volume") return `adjustVolume(${cmd.val})`;
-    if (cmd.param === "mute") return `toggleMute()`;
+    return `if (typeof handleRemoteCommand === 'function') { handleRemoteCommand(${JSON.stringify(cmd)}); }`;
   }
   return "";
 }

@@ -344,12 +344,13 @@
   <div class="qr-modal-box">
     <div class="distro-pill" style="display:inline-block;margin-bottom:8px;">MOBILE PHONE REMOTE</div>
     <h2 style="color:#fff;font-size:18px;margin-bottom:6px;">Scan to Control Your TV</h2>
-    <p style="color:var(--muted);font-size:12px;">Open your iPhone or Android camera to point-and-control your TV with touch D-Pad, phone keyboard, split-screen toggles, and volume.</p>
+    <p style="color:var(--muted);font-size:12px;">Open your iPhone or Android camera to point-and-control your TV with touch D-Pad, keyboard, and split-screen toggles. Or cast your Mac screen at <b>/cast</b>.</p>
     <img id="qr-code-img" class="qr-img" src="" alt="Remote QR Code">
     <div style="margin-bottom:12px;font-size:12px;color:var(--cyan);word-break:break-all;" id="qr-url-text">Loading URL...</div>
-    <div style="display:flex;gap:8px;justify-content:center;">
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
       <button class="nav-btn selected" onclick="closeRemoteQrModal()">Close (Remote BACK)</button>
-      <button class="nav-btn" onclick="openRemoteInNewTab()">Open on this Device</button>
+      <button class="nav-btn" onclick="browseTo('/cast_view', 'Mac Screen Cast', true)">🖥️ Mac Screen Cast</button>
+      <button class="nav-btn" onclick="openRemoteInNewTab()">Open Remote</button>
     </div>
   </div>
 </div>
@@ -463,6 +464,7 @@
           <button class="nav-btn selected" onclick="browseTo('https://www.youtube.com/tv', 'YouTube TV', true)">▶ Launch 4K Fullscreen</button>
           <button class="nav-btn" onclick="browseTo('https://fis.com.mv', 'Flight Info (FIS)')">✈️ Flight Info (FIS)</button>
           <button class="nav-btn" onclick="toggleDualScreen(true)">🪟 Dual Split (FIS + YouTube)</button>
+          <button class="nav-btn" onclick="browseTo('/cast_view', 'Mac Extended Screen', true)">🖥️ Cast Mac Screen</button>
           <button class="nav-btn" onclick="openRemoteQrModal()">📱 Phone Remote QR</button>
         </div>
       </div>
@@ -687,7 +689,7 @@
     <span class="key-hint"><kbd>ENTER</kbd> Launch</span>
     <span class="key-hint"><kbd>BACK</kbd> Exit / Close</span>
   </div>
-  <div id="footer-live-badge">OMARCHY TV OS v8.0</div>
+  <div id="footer-live-badge">OMARCHY TV OS v9.0</div>
 </div>
 
 <script>
@@ -706,6 +708,7 @@ var gpuHistory = new Array(28).fill(16.6);
 var liveState = { volume: 0, brightness: 0, contrast: 0, mute: 0 };
 
 var DEFAULT_APPS = [
+  { name: "Mac Extended Screen", desc: "Live Mac Screen Cast", icon: "🖥️", badge: "60 FPS", url: "/cast_view" },
   { name: "Flight Info (FIS)", desc: "Velana Airport Flights", icon: "✈️", badge: "AIRPORT", url: "https://fis.com.mv" },
   { name: "YouTube TV", desc: "4K Leanback UI", icon: "📺", badge: "4K HDR", url: "https://www.youtube.com/tv" },
   { name: "YouTube Web", desc: "Browse & Search", icon: "▶", badge: "WEB", url: "https://m.youtube.com" },
@@ -1003,12 +1006,12 @@ function addCustomPin() {
   var apps = getSavedApps();
   var name = val.replace(/^https?:\/\//, "").split("/")[0];
   apps.push({ name: name, desc: val, icon: "🌐", badge: "PIN", url: val });
-  try { localStorage.setItem("omarchy_apps_v8", JSON.stringify(apps)); } catch (e) {}
+  try { localStorage.setItem("omarchy_apps_v9", JSON.stringify(apps)); } catch (e) {}
   renderAppDock();
 }
 
 function resetCustomApps() {
-  try { localStorage.removeItem("omarchy_apps_v8"); } catch (e) {}
+  try { localStorage.removeItem("omarchy_apps_v9"); } catch (e) {}
   renderAppDock();
 }
 
@@ -1027,13 +1030,16 @@ function launchDockApp(idx) {
 
 function getSavedApps() {
   try {
-    var r = localStorage.getItem("omarchy_apps_v8");
+    var r = localStorage.getItem("omarchy_apps_v9");
     if (r) {
       var parsed = JSON.parse(r);
+      if (!parsed.some(a => a.url && a.url.includes("cast_view"))) {
+        parsed.unshift({ name: "Mac Extended Screen", desc: "Live Mac Screen Cast", icon: "🖥️", badge: "60 FPS", url: "/cast_view" });
+      }
       if (!parsed.some(a => a.url && a.url.includes("fis.com.mv"))) {
         parsed.unshift({ name: "Flight Info (FIS)", desc: "Velana Airport Flights", icon: "✈️", badge: "AIRPORT", url: "https://fis.com.mv" });
-        try { localStorage.setItem("omarchy_apps_v8", JSON.stringify(parsed)); } catch(e) {}
       }
+      try { localStorage.setItem("omarchy_apps_v9", JSON.stringify(parsed)); } catch(e) {}
       return parsed;
     }
   } catch (e) {}
@@ -1317,7 +1323,7 @@ function applyTheme(t) {
   document.body.setAttribute("data-theme", t);
   var lbl = document.getElementById("wb-theme-name");
   if (lbl) lbl.textContent = t.toUpperCase();
-  try { localStorage.setItem("omarchy_theme_v8", t); } catch (e) {}
+  try { localStorage.setItem("omarchy_theme_v9", t); } catch (e) {}
 }
 
 function cycleTheme() {
@@ -1380,8 +1386,119 @@ function switchWorkspace(n) {
   updateButtonSelection();
 }
 
+function handleKeycodeDirect(kc) {
+  var kbox = document.getElementById("key-sniffer-box");
+  if (kbox) kbox.textContent = "[" + new Date().toLocaleTimeString() + "] Remote: " + kc + "\n" + kbox.textContent.slice(0, 400);
+
+  // REMOTE BACK BUTTON (461 / 8 / 27)
+  if (kc === 461 || kc === 8 || kc === 27) {
+    if (document.getElementById("remote-qr-modal").classList.contains("open")) {
+      closeRemoteQrModal();
+      return;
+    }
+    if (isAppWindowOpen) {
+      if (isBrowserFullscreen) {
+        setBrowserFullscreen(false);
+      } else {
+        closeInAppWindow();
+      }
+      return;
+    }
+  }
+
+  // KEY 5 -> TOGGLE DUAL SCREEN 50/50
+  if (kc === 53) { toggleDualScreen(); return; }
+
+  // KEY 6 -> TOGGLE PiP
+  if (kc === 54) { togglePipMode(); return; }
+
+  // KEY 9 -> OPEN REMOTE QR MODAL
+  if (kc === 57) { openRemoteQrModal(); return; }
+
+  // GREEN BUTTON (404 / 50) -> TOGGLE FULLSCREEN IN BROWSER
+  if (kc === 404 || kc === 50) {
+    if (isAppWindowOpen) {
+      toggleBrowserFullscreen();
+      return;
+    }
+  }
+
+  // WORKSPACE HOTKEYS
+  if (kc === 403 || kc === 49) { switchWorkspace(1); return; }
+  if (kc === 404 || kc === 50) { switchWorkspace(2); return; }
+  if (kc === 405 || kc === 51) { switchWorkspace(3); return; }
+  if (kc === 406 || kc === 52) { switchWorkspace(4); return; }
+  if (kc === 48) { cycleTheme(); return; }
+
+  // WHEN BROWSER OVERLAY IS OPEN:
+  if (isAppWindowOpen) {
+    if (!isBrowserFullscreen) {
+      var inItems = getVisibleInAppItems();
+      if (kc === 37 || kc === 38) {
+        if (inItems.length > 0) {
+          inAppNavIndex = (inAppNavIndex - 1 + inItems.length) % inItems.length;
+          updateInAppButtonSelection();
+        }
+      } else if (kc === 39 || kc === 40) {
+        if (inItems.length > 0) {
+          inAppNavIndex = (inAppNavIndex + 1) % inItems.length;
+          updateInAppButtonSelection();
+        }
+      } else if (kc === 13) {
+        if (inItems[inAppNavIndex]) {
+          inItems[inAppNavIndex].click();
+        }
+      }
+    }
+    return;
+  }
+
+  // DESKTOP WORKSPACE NAVIGATION
+  var items = getVisibleNavItems();
+  if (kc === 37 || kc === 38) {
+    if (items.length > 0) {
+      navIndex = (navIndex - 1 + items.length) % items.length;
+      updateButtonSelection();
+    }
+  } else if (kc === 39 || kc === 40) {
+    if (items.length > 0) {
+      navIndex = (navIndex + 1) % items.length;
+      updateButtonSelection();
+    }
+  } else if (kc === 13) {
+    if (items[navIndex]) {
+      items[navIndex].click();
+    }
+  }
+}
+window.handleKeycodeDirect = handleKeycodeDirect;
+
+function handleRemoteCommand(data) {
+  if (!data) return;
+  if (data.type === "key") {
+    handleKeycodeDirect(data.keyCode);
+  } else if (data.type === "action") {
+    if (data.action === "screen_split") toggleDualScreen(true);
+    else if (data.action === "screen_single") toggleDualScreen(false);
+    else if (data.action === "screen_pip") togglePipMode();
+    else if (data.action === "screen_swap") swapDualScreens();
+    else if (data.action === "cast_mac") browseTo("/cast_view", "Mac Extended Screen", true);
+  } else if (data.type === "launch" || data.type === "browse") {
+    browseTo(data.url, data.title || data.url);
+  } else if (data.type === "hal") {
+    if (data.param === "brightness") setLiveBrightness(data.val);
+    else if (data.param === "brightness_preset") setLiveBrightnessPreset(data.val);
+    else if (data.param === "volume") adjustVolume(data.val);
+    else if (data.param === "mute") toggleMute();
+  }
+}
+window.handleRemoteCommand = handleRemoteCommand;
+
 // REAL REMOTE CONTROL KEYLOGGER & D-PAD CONTROLLER
 window.addEventListener("keydown", function(e) {
+  var kc = e.keyCode || e.which;
+  handleKeycodeDirect(kc);
+
   var kc = e.keyCode || e.which;
 
   var kbox = document.getElementById("key-sniffer-box");
@@ -1512,11 +1629,11 @@ setInterval(function() {
     document.getElementById("wb-rtt").textContent = "OFFLINE";
   };
   xhr.send();
-}, 2000);
+}, 1000);
 
 window.addEventListener("load", function() {
   try {
-    var saved = localStorage.getItem("omarchy_theme_v8");
+    var saved = localStorage.getItem("omarchy_theme_v9");
     if (saved) {
       var idx = THEMES.indexOf(saved);
       if (idx !== -1) currentThemeIdx = idx;

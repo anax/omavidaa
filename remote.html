@@ -3,126 +3,122 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Omarchy TV // Mobile Remote</title>
+<title>Omarchy TV // Remote & Screen Cast</title>
 <style>
   :root {
-    --bg: #1a1b26; --bg-alt: #16161e; --bg-panel: rgba(26, 27, 38, 0.95);
-    --fg: #c0caf5; --muted: #565f89; --accent: #7aa2f7; --accent2: #bb9af7;
-    --green: #9ece6a; --amber: #e0af68; --red: #f7768e; --cyan: #7dcfff; --border: #292e42;
+    --bg: #11111b; --bg-card: #181825; --accent: #7aa2f7; --accent2: #bb9af7;
+    --cyan: #7dcfff; --green: #9ece6a; --amber: #e0af68; --red: #f7768e;
+    --fg: #cdd6f4; --muted: #6c7086; --border: #313244;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body {
-    width: 100vw; min-height: 100vh; background: var(--bg); color: var(--fg);
-    font-family: -apple-system, BlinkMacSystemFont, "JetBrains Mono", monospace;
-    display: flex; flex-direction: column; align-items: center; padding: 12px 14px 24px;
+    background: var(--bg); color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    padding: 14px; min-height: 100vh; display: flex; flex-direction: column; align-items: center;
   }
   .header {
-    width: 100%; max-width: 420px; display: flex; align-items: center; justify-content: space-between;
+    width: 100%; max-width: 420px; display: flex; justify-content: space-between; align-items: center;
     padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 14px;
   }
   .distro-pill {
-    background: var(--accent); color: #111; font-weight: 800;
-    padding: 4px 10px; border-radius: 4px; font-size: 12px; letter-spacing: 0.5px;
+    background: var(--accent); color: #11111b; font-weight: 800; font-size: 11px;
+    padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;
   }
-  .conn-status { font-size: 11px; color: var(--green); display: flex; align-items: center; gap: 5px; }
-  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+  .conn-status {
+    display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: var(--green);
+  }
+  .conn-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 
   .section-title {
-    width: 100%; max-width: 420px; font-size: 11px; font-weight: 700;
-    color: var(--muted); letter-spacing: 0.5px; margin-bottom: 8px; text-transform: uppercase;
+    width: 100%; max-width: 420px; font-size: 11px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.8px; margin: 12px 0 6px 4px;
   }
 
-  /* EXTENDED SCREEN TOGGLES */
   .screen-toggles {
-    width: 100%; max-width: 420px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px;
+    width: 100%; max-width: 420px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
   }
   .screen-btn {
-    background: var(--bg-alt); border: 1.5px solid var(--border); color: var(--fg);
-    padding: 10px 4px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer;
-    display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center;
+    background: var(--bg-card); border: 1px solid var(--border); color: var(--fg);
+    border-radius: 10px; padding: 12px 6px; font-size: 12px; font-weight: 600;
+    display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer;
   }
-  .screen-btn:active { background: rgba(122, 162, 247, 0.2); border-color: var(--accent); }
+  .screen-btn:active { background: rgba(122, 162, 247, 0.25); border-color: var(--accent); transform: scale(0.97); }
 
   /* D-PAD WHEEL */
   .dpad-container {
-    width: 220px; height: 220px; position: relative; margin: 8px auto 14px;
-    background: #111218; border-radius: 50%; border: 3px solid var(--border);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
+    width: 220px; height: 220px; position: relative; margin: 16px auto;
   }
   .dpad-btn {
-    position: absolute; background: var(--bg-alt); color: var(--fg);
-    border: 1px solid var(--border); font-size: 16px; font-weight: bold;
+    position: absolute; background: var(--bg-card); border: 1px solid var(--border);
+    color: var(--fg); font-size: 20px; font-weight: 700; border-radius: 14px;
     display: flex; align-items: center; justify-content: center; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: transform 0.1s;
   }
-  .dpad-btn:active { background: var(--accent); color: #111; }
-  .dpad-up { top: 8px; left: 75px; width: 70px; height: 55px; border-radius: 12px 12px 4px 4px; }
-  .dpad-down { bottom: 8px; left: 75px; width: 70px; height: 55px; border-radius: 4px 4px 12px 12px; }
-  .dpad-left { top: 75px; left: 8px; width: 55px; height: 70px; border-radius: 12px 4px 4px 12px; }
-  .dpad-right { top: 75px; right: 8px; width: 55px; height: 70px; border-radius: 4px 12px 12px 4px; }
+  .dpad-btn:active { background: var(--accent); color: #11111b; transform: scale(0.92); }
+  .dpad-up { top: 0; left: 70px; width: 80px; height: 65px; border-bottom: none; border-radius: 20px 20px 8px 8px; }
+  .dpad-down { bottom: 0; left: 70px; width: 80px; height: 65px; border-top: none; border-radius: 8px 8px 20px 20px; }
+  .dpad-left { top: 70px; left: 0; width: 65px; height: 80px; border-right: none; border-radius: 20px 8px 8px 20px; }
+  .dpad-right { top: 70px; right: 0; width: 65px; height: 80px; border-left: none; border-radius: 8px 20px 20px 8px; }
   .dpad-center {
-    width: 68px; height: 68px; border-radius: 50%; background: #1a1b26;
-    border: 2px solid var(--accent); color: var(--cyan); font-size: 14px; font-weight: 800;
-    box-shadow: 0 0 12px rgba(122,162,247,0.25);
+    top: 70px; left: 70px; width: 80px; height: 80px; border-radius: 50%;
+    background: #1e1e2e; border: 2px solid var(--accent); color: var(--accent);
+    font-size: 16px; font-weight: 800;
   }
 
-  /* SYSTEM BUTTONS ROW */
   .sys-row {
-    width: 100%; max-width: 420px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px;
+    width: 100%; max-width: 420px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px;
   }
   .sys-btn {
-    background: var(--bg-alt); border: 1px solid var(--border); color: var(--fg);
-    padding: 10px 6px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;
-    text-align: center;
+    background: var(--bg-card); border: 1px solid var(--border); color: var(--fg);
+    border-radius: 10px; padding: 12px 4px; font-size: 11px; font-weight: 700;
+    text-align: center; cursor: pointer;
   }
-  .sys-btn:active { background: rgba(122, 162, 247, 0.2); border-color: var(--accent); }
-  .btn-back { border-color: var(--red); color: var(--red); }
-  .btn-back:active { background: var(--red); color: #fff; }
+  .sys-btn:active { background: rgba(122, 162, 247, 0.25); border-color: var(--accent); }
+  .btn-back { border-color: rgba(247, 118, 142, 0.4); color: var(--red); }
 
-  /* HARDWARE CONTROLS */
-  .hal-grid {
-    width: 100%; max-width: 420px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;
-  }
-  .hal-card {
-    background: var(--bg-alt); border: 1px solid var(--border); border-radius: 6px;
-    padding: 8px 10px; display: flex; flex-direction: column; gap: 6px;
-  }
-  .hal-label { font-size: 11px; color: var(--amber); font-weight: bold; }
-  .hal-btn-row { display: flex; gap: 4px; }
-  .hal-btn {
-    flex: 1; background: #0d0e14; border: 1px solid var(--border); color: var(--fg);
-    padding: 6px 0; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; text-align: center;
-  }
-  .hal-btn:active { background: var(--accent); color: #111; }
-
-  /* SEARCH / URL INPUT */
   .input-section {
-    width: 100%; max-width: 420px; display: flex; gap: 6px; margin-bottom: 14px;
+    width: 100%; max-width: 420px; display: flex; gap: 8px; margin-top: 6px;
   }
   .input-box {
-    flex: 1; background: #0d0e14; border: 1px solid var(--border); color: #fff;
-    padding: 9px 12px; border-radius: 6px; font-size: 13px; font-family: inherit; outline: none;
+    flex: 1; background: var(--bg-card); border: 1px solid var(--border);
+    color: var(--fg); padding: 12px 14px; border-radius: 10px; font-size: 14px; outline: none;
   }
   .input-box:focus { border-color: var(--accent); }
   .send-btn {
-    background: var(--accent); color: #111; font-weight: 800; border: none;
-    padding: 0 14px; border-radius: 6px; font-size: 12px; cursor: pointer;
+    background: var(--accent); color: #11111b; border: none; padding: 0 18px;
+    border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer;
   }
+  .send-btn:active { opacity: 0.8; }
 
-  /* APP LAUNCHER PILLS */
   .apps-grid {
-    width: 100%; max-width: 420px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 14px;
+    width: 100%; max-width: 420px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
   }
   .app-pill {
-    background: var(--bg-alt); border: 1px solid var(--border); color: var(--fg);
-    padding: 9px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
-    display: flex; align-items: center; gap: 7px; text-align: left;
+    background: var(--bg-card); border: 1px solid var(--border); color: var(--fg);
+    border-radius: 8px; padding: 10px 12px; font-size: 12px; font-weight: 600;
+    text-align: left; cursor: pointer; display: flex; align-items: center; gap: 6px;
   }
   .app-pill:active { background: rgba(122, 162, 247, 0.2); border-color: var(--accent); }
 
+  .hal-grid {
+    width: 100%; max-width: 420px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .hal-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 10px;
+  }
+  .hal-label { font-size: 10px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
+  .hal-btn-row { display: flex; gap: 4px; }
+  .hal-btn {
+    flex: 1; background: #1e1e2e; border: 1px solid var(--border); color: var(--fg);
+    padding: 8px 4px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer;
+  }
+  .hal-btn:active { background: var(--accent); color: #11111b; }
+
   .feedback-toast {
-    position: fixed; bottom: 10px; background: rgba(0,0,0,0.85); color: var(--cyan);
-    border: 1px solid var(--cyan); padding: 5px 12px; border-radius: 14px; font-size: 11px;
-    opacity: 0; transition: opacity 0.2s ease; pointer-events: none;
+    position: fixed; bottom: 12px; background: rgba(0,0,0,0.9); color: var(--cyan);
+    border: 1px solid var(--cyan); padding: 6px 14px; border-radius: 20px; font-size: 12px;
+    font-weight: 600; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; z-index: 200;
   }
   .feedback-toast.show { opacity: 1; }
 </style>
@@ -134,22 +130,22 @@
     <span class="distro-pill">OMARCHY</span>
     <b style="font-size:14px;color:var(--cyan)">TV REMOTE</b>
   </div>
-  <div class="conn-status"><span class="dot"></span> CONNECTED</div>
+  <div class="conn-status" id="conn-lbl"><span class="dot"></span> CONNECTED</div>
 </div>
 
-<!-- 1. EXTENDED SCREEN & MULTI-WINDOW CONTROLS -->
-<div class="section-title">Extended Screen &amp; Tiling</div>
+<!-- 1. EXTENDED SCREEN & MAC SCREEN CAST -->
+<div class="section-title">Extended Screen &amp; Casting</div>
 <div class="screen-toggles">
   <button class="screen-btn" onclick="sendAction('screen_split')">
     <span style="font-size:16px;">🪟</span>
     <span>Dual Split 50/50</span>
   </button>
-  <button class="screen-btn" onclick="sendAction('screen_pip')">
-    <span style="font-size:16px;">🖼️</span>
-    <span>Floating PiP</span>
+  <button class="screen-btn" onclick="sendAction('cast_mac')">
+    <span style="font-size:16px;">🖥️</span>
+    <span>Mac Screen Cast</span>
   </button>
   <button class="screen-btn" onclick="sendAction('screen_single')">
-    <span style="font-size:16px;">🖥️</span>
+    <span style="font-size:16px;">📺</span>
     <span>Single Screen</span>
   </button>
 </div>
@@ -166,14 +162,14 @@
 
 <!-- 3. ESSENTIAL SYSTEM CONTROLS -->
 <div class="sys-row">
-  <button class="sys-btn btn-back" onclick="sendKey(461, 'BACK')">◀ Return</button>
-  <button class="sys-btn" onclick="sendKey(404, 'GREEN')">⛶ Fullscreen</button>
-  <button class="sys-btn" onclick="sendKey(403, 'RED')">🏠 Dock (1)</button>
-  <button class="sys-btn" onclick="sendKey(48, 'THEME')">🎨 Theme (0)</button>
+  <button class="sys-btn btn-back" onclick="sendKey(461, 'BACK')">◀ Back</button>
+  <button class="sys-btn" onclick="sendKey(404, 'FULLSCREEN')">⛶ Full</button>
+  <button class="sys-btn" onclick="sendKey(403, 'DOCK')">🏠 Dock</button>
+  <button class="sys-btn" onclick="sendKey(48, 'THEME')">🎨 Theme</button>
 </div>
 
 <!-- 4. SEND TEXT OR URL TO TV -->
-<div class="section-title">Send to TV Screen</div>
+<div class="section-title">Type on TV</div>
 <div class="input-section">
   <input id="tv-text-input" class="input-box" placeholder="Type URL or search query...">
   <button class="send-btn" onclick="sendInputToTv()">Send</button>
@@ -186,20 +182,20 @@
   <button class="app-pill" onclick="launchUrl('https://www.youtube.com/tv', 'YouTube TV')">📺 YouTube TV 4K</button>
   <button class="app-pill" onclick="launchUrl('https://m.youtube.com', 'YouTube Web')">▶ YouTube Web</button>
   <button class="app-pill" onclick="launchUrl('https://www.google.com', 'Google Search')">🔍 Google Search</button>
+  <button class="app-pill" onclick="launchUrl(window.location.origin + '/cast_view', 'Mac Display')">🖥️ Mac Display</button>
   <button class="app-pill" onclick="launchUrl('https://news.ycombinator.com', 'Hacker News')">⚡ Hacker News</button>
-  <button class="app-pill" onclick="launchUrl('https://en.m.wikipedia.org', 'Wikipedia')">📖 Wikipedia</button>
 </div>
 
 <!-- 6. HARDWARE HAL CONTROLS -->
-<div class="section-title">Hardware Direct Write</div>
+<div class="section-title">TV Hardware Controls</div>
 <div class="hal-grid">
   <div class="hal-card">
-    <div class="hal-label">Backlight Brightness</div>
+    <div class="hal-label">Display Brightness</div>
     <div class="hal-btn-row">
       <button class="hal-btn" onclick="sendHal('brightness', -10)">-10%</button>
       <button class="hal-btn" onclick="sendHal('brightness', 10)">+10%</button>
       <button class="hal-btn" onclick="sendHal('brightness_preset', 50)">50%</button>
-      <button class="hal-btn" onclick="sendHal('brightness_preset', 80)">80%</button>
+      <button class="hal-btn" onclick="sendHal('brightness_preset', 85)">85%</button>
     </div>
   </div>
   <div class="hal-card">
@@ -216,7 +212,7 @@
 
 <script>
 function vibrate() {
-  if (navigator.vibrate) navigator.vibrate(20);
+  if (navigator.vibrate) navigator.vibrate(25);
 }
 
 function showToast(msg) {
@@ -231,6 +227,14 @@ function postCommand(cmdObj) {
   var xhr = new XMLHttpRequest();
   xhr.open("POST", "/api/remote_command", true);
   xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      document.getElementById("conn-lbl").style.color = "var(--green)";
+    }
+  };
+  xhr.onerror = function() {
+    document.getElementById("conn-lbl").style.color = "var(--red)";
+  };
   xhr.send(JSON.stringify(cmdObj));
 }
 

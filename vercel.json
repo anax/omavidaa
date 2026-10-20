@@ -26,6 +26,14 @@
       "destination": "/remote.html"
     },
     {
+      "source": "/cast",
+      "destination": "/cast.html"
+    },
+    {
+      "source": "/cast_view",
+      "destination": "/cast_view.html"
+    },
+    {
       "source": "/api/remote_command",
       "destination": "/api/remote_command"
     },

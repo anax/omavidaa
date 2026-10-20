@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mac Extended Screen // Omarchy TV OS</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100vw; height: 100vh; overflow: hidden; background: #000;
+    color: #c0caf5; font-family: -apple-system, BlinkMacSystemFont, monospace;
+  }
+  #stream-video {
+    width: 100vw; height: 100vh; object-fit: contain; display: block;
+  }
+  #stream-canvas {
+    width: 100vw; height: 100vh; object-fit: contain; display: none;
+  }
+  .overlay-bar {
+    position: fixed; top: 0; left: 0; right: 0; height: 44px;
+    background: linear-gradient(180deg, rgba(16,16,24,0.95), rgba(16,16,24,0));
+    display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+    z-index: 100; opacity: 0; transition: opacity 0.3s ease;
+  }
+  body:hover .overlay-bar, .overlay-bar.show { opacity: 1; }
+  .tag { font-size: 13px; font-weight: 700; color: #7aa2f7; display: flex; align-items: center; gap: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #9ece6a; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+  .ctrl-btn {
+    background: rgba(30,30,46,0.85); color: #c0caf5; border: 1px solid #3b4261;
+    padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  .ctrl-btn:hover { border-color: #7aa2f7; color: #7aa2f7; }
+
+  .waiting-box {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px; background: #1a1b26; z-index: 50;
+  }
+  .spinner {
+    width: 48px; height: 48px; border: 3px solid #292e42; border-top-color: #7aa2f7;
+    border-radius: 50%; animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .waiting-title { font-size: 18px; font-weight: 700; color: #7dcfff; }
+  .waiting-desc { font-size: 13px; color: #565f89; max-width: 420px; text-align: center; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<div class="overlay-bar" id="overlay">
+  <div class="tag"><div class="dot"></div> MAC EXTENDED DISPLAY &bull; 60 FPS</div>
+  <div style="display:flex;gap:10px;">
+    <button class="ctrl-btn" onclick="toggleAudio()">🔊 Unmute</button>
+    <button class="ctrl-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+    <button class="ctrl-btn" onclick="window.location.href='/'">🏠 Exit to Dock</button>
+  </div>
+</div>
+
+<video id="stream-video" autoplay playsinline></video>
+<canvas id="stream-canvas"></canvas>
+
+<div class="waiting-box" id="waiting">
+  <div class="spinner"></div>
+  <div class="waiting-title">Waiting for Mac Screen Stream...</div>
+  <div class="waiting-desc">
+    On your Mac, open: <b style="color:#7aa2f7;" id="cast-url-label">/cast</b><br>
+    and click <b>"Start Sharing Mac Screen"</b>.
+  </div>
+</div>
+
+<script>
+const video = document.getElementById("stream-video");
+const canvas = document.getElementById("stream-canvas");
+const ctx = canvas.getContext("2d");
+const waiting = document.getElementById("waiting");
+document.getElementById("cast-url-label").textContent = window.location.origin + "/cast";
+
+let pc = null;
+let streamActive = false;
+
+// 1. WebRTC Receiver
+async function initWebRtcReceiver() {
+  try {
+    const res = await fetch("/api/webrtc_signal?type=offer");
+    if (!res.ok) return;
+    const offer = await res.json();
+    if (!offer || !offer.type) return;
+
+    pc = new RTCPeerConnection({
+      iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+    });
+
+    pc.ontrack = (event) => {
+      video.srcObject = event.streams[0];
+      video.play().catch(() => {});
+      waiting.style.display = "none";
+      streamActive = true;
+    };
+
+    pc.onicecandidate = (event) => {
+      if (event.candidate) {
+        fetch("/api/webrtc_signal?type=candidate&role=receiver", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(event.candidate)
+        }).catch(() => {});
+      }
+    };
+
+    await pc.setRemoteDescription(new RTCSessionDescription(offer));
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+
+    await fetch("/api/webrtc_signal?type=answer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(answer)
+    });
+
+  } catch (e) {
+    console.log("WebRTC Receiver init:", e);
+  }
+}
+
+// 2. High-speed Canvas Fallback Poller
+function pollCanvasStream() {
+  const img = new Image();
+  img.onload = function() {
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    canvas.style.display = "block";
+    video.style.display = "none";
+    waiting.style.display = "none";
+    streamActive = true;
+  };
+
+  setInterval(() => {
+    if (streamActive && video.srcObject) return; // WebRTC active, no canvas needed
+    img.src = "/api/cast_frame?t=" + Date.now();
+  }, 100);
+}
+
+function toggleAudio() {
+  video.muted = !video.muted;
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+}
+
+window.addEventListener("keydown", (e) => {
+  if (e.keyCode === 461 || e.keyCode === 8 || e.keyCode === 27) window.location.href = "/";
+  if (e.keyCode === 404 || e.keyCode === 50) toggleFullscreen();
+});
+
+setInterval(initWebRtcReceiver, 3000);
+pollCanvasStream();
+</script>
+</body>
+</html>

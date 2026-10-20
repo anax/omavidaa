@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-OMARCHY TV OS v8.0 // EXTENDED SCREEN & REMOTE SERVER
+OMARCHY TV OS v9.0 // EXTENDED SCREEN & REMOTE SERVER
 """
 
 import http.server
@@ -16,6 +16,10 @@ PORT = 8765
 BASE_DIR = Path(__file__).parent
 KEYLOG_FILE = BASE_DIR / "tv_keycodes.log"
 REMOTE_FILE = BASE_DIR / "remote.html"
+CAST_FILE = BASE_DIR / "cast.html"
+CAST_VIEW_FILE = BASE_DIR / "cast_view.html"
+LATEST_CAST_FRAME = None
+WEBRTC_SIGNALS = {"offer": None, "answer": None, "candidates": []}
 
 PENDING_COMMANDS = []
 
@@ -29,7 +33,7 @@ SAFE_MAC_COMMANDS = {
 }
 
 SW_JS = r"""
-const CACHE_NAME = 'omarchy-tv-os-v8';
+const CACHE_NAME = 'omarchy-tv-os-v9';
 self.addEventListener('install', (e) => { self.skipWaiting(); });
 self.addEventListener('activate', (e) => { e.waitUntil(self.clients.claim()); });
 self.addEventListener('fetch', (e) => {
@@ -403,12 +407,13 @@ HTML_PAGE = r"""<!DOCTYPE html>
   <div class="qr-modal-box">
     <div class="distro-pill" style="display:inline-block;margin-bottom:8px;">MOBILE PHONE REMOTE</div>
     <h2 style="color:#fff;font-size:18px;margin-bottom:6px;">Scan to Control Your TV</h2>
-    <p style="color:var(--muted);font-size:12px;">Open your iPhone or Android camera to point-and-control your TV with touch D-Pad, phone keyboard, split-screen toggles, and volume.</p>
+    <p style="color:var(--muted);font-size:12px;">Open your iPhone or Android camera to point-and-control your TV with touch D-Pad, keyboard, and split-screen toggles. Or cast your Mac screen at <b>/cast</b>.</p>
     <img id="qr-code-img" class="qr-img" src="" alt="Remote QR Code">
     <div style="margin-bottom:12px;font-size:12px;color:var(--cyan);word-break:break-all;" id="qr-url-text">Loading URL...</div>
-    <div style="display:flex;gap:8px;justify-content:center;">
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
       <button class="nav-btn selected" onclick="closeRemoteQrModal()">Close (Remote BACK)</button>
-      <button class="nav-btn" onclick="openRemoteInNewTab()">Open on this Device</button>
+      <button class="nav-btn" onclick="browseTo('/cast_view', 'Mac Screen Cast', true)">🖥️ Mac Screen Cast</button>
+      <button class="nav-btn" onclick="openRemoteInNewTab()">Open Remote</button>
     </div>
   </div>
 </div>
@@ -522,6 +527,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
           <button class="nav-btn selected" onclick="browseTo('https://www.youtube.com/tv', 'YouTube TV', true)">▶ Launch 4K Fullscreen</button>
           <button class="nav-btn" onclick="browseTo('https://fis.com.mv', 'Flight Info (FIS)')">✈️ Flight Info (FIS)</button>
           <button class="nav-btn" onclick="toggleDualScreen(true)">🪟 Dual Split (FIS + YouTube)</button>
+          <button class="nav-btn" onclick="browseTo('/cast_view', 'Mac Extended Screen', true)">🖥️ Cast Mac Screen</button>
           <button class="nav-btn" onclick="openRemoteQrModal()">📱 Phone Remote QR</button>
         </div>
       </div>
@@ -746,7 +752,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
     <span class="key-hint"><kbd>ENTER</kbd> Launch</span>
     <span class="key-hint"><kbd>BACK</kbd> Exit / Close</span>
   </div>
-  <div id="footer-live-badge">OMARCHY TV OS v8.0</div>
+  <div id="footer-live-badge">OMARCHY TV OS v9.0</div>
 </div>
 
 <script>
@@ -765,6 +771,7 @@ var gpuHistory = new Array(28).fill(16.6);
 var liveState = { volume: 0, brightness: 0, contrast: 0, mute: 0 };
 
 var DEFAULT_APPS = [
+  { name: "Mac Extended Screen", desc: "Live Mac Screen Cast", icon: "🖥️", badge: "60 FPS", url: "/cast_view" },
   { name: "Flight Info (FIS)", desc: "Velana Airport Flights", icon: "✈️", badge: "AIRPORT", url: "https://fis.com.mv" },
   { name: "YouTube TV", desc: "4K Leanback UI", icon: "📺", badge: "4K HDR", url: "https://www.youtube.com/tv" },
   { name: "YouTube Web", desc: "Browse & Search", icon: "▶", badge: "WEB", url: "https://m.youtube.com" },
@@ -1062,12 +1069,12 @@ function addCustomPin() {
   var apps = getSavedApps();
   var name = val.replace(/^https?:\/\//, "").split("/")[0];
   apps.push({ name: name, desc: val, icon: "🌐", badge: "PIN", url: val });
-  try { localStorage.setItem("omarchy_apps_v8", JSON.stringify(apps)); } catch (e) {}
+  try { localStorage.setItem("omarchy_apps_v9", JSON.stringify(apps)); } catch (e) {}
   renderAppDock();
 }
 
 function resetCustomApps() {
-  try { localStorage.removeItem("omarchy_apps_v8"); } catch (e) {}
+  try { localStorage.removeItem("omarchy_apps_v9"); } catch (e) {}
   renderAppDock();
 }
 
@@ -1086,13 +1093,16 @@ function launchDockApp(idx) {
 
 function getSavedApps() {
   try {
-    var r = localStorage.getItem("omarchy_apps_v8");
+    var r = localStorage.getItem("omarchy_apps_v9");
     if (r) {
       var parsed = JSON.parse(r);
+      if (!parsed.some(a => a.url && a.url.includes("cast_view"))) {
+        parsed.unshift({ name: "Mac Extended Screen", desc: "Live Mac Screen Cast", icon: "🖥️", badge: "60 FPS", url: "/cast_view" });
+      }
       if (!parsed.some(a => a.url && a.url.includes("fis.com.mv"))) {
         parsed.unshift({ name: "Flight Info (FIS)", desc: "Velana Airport Flights", icon: "✈️", badge: "AIRPORT", url: "https://fis.com.mv" });
-        try { localStorage.setItem("omarchy_apps_v8", JSON.stringify(parsed)); } catch(e) {}
       }
+      try { localStorage.setItem("omarchy_apps_v9", JSON.stringify(parsed)); } catch(e) {}
       return parsed;
     }
   } catch (e) {}
@@ -1376,7 +1386,7 @@ function applyTheme(t) {
   document.body.setAttribute("data-theme", t);
   var lbl = document.getElementById("wb-theme-name");
   if (lbl) lbl.textContent = t.toUpperCase();
-  try { localStorage.setItem("omarchy_theme_v8", t); } catch (e) {}
+  try { localStorage.setItem("omarchy_theme_v9", t); } catch (e) {}
 }
 
 function cycleTheme() {
@@ -1439,8 +1449,119 @@ function switchWorkspace(n) {
   updateButtonSelection();
 }
 
+function handleKeycodeDirect(kc) {
+  var kbox = document.getElementById("key-sniffer-box");
+  if (kbox) kbox.textContent = "[" + new Date().toLocaleTimeString() + "] Remote: " + kc + "\n" + kbox.textContent.slice(0, 400);
+
+  // REMOTE BACK BUTTON (461 / 8 / 27)
+  if (kc === 461 || kc === 8 || kc === 27) {
+    if (document.getElementById("remote-qr-modal").classList.contains("open")) {
+      closeRemoteQrModal();
+      return;
+    }
+    if (isAppWindowOpen) {
+      if (isBrowserFullscreen) {
+        setBrowserFullscreen(false);
+      } else {
+        closeInAppWindow();
+      }
+      return;
+    }
+  }
+
+  // KEY 5 -> TOGGLE DUAL SCREEN 50/50
+  if (kc === 53) { toggleDualScreen(); return; }
+
+  // KEY 6 -> TOGGLE PiP
+  if (kc === 54) { togglePipMode(); return; }
+
+  // KEY 9 -> OPEN REMOTE QR MODAL
+  if (kc === 57) { openRemoteQrModal(); return; }
+
+  // GREEN BUTTON (404 / 50) -> TOGGLE FULLSCREEN IN BROWSER
+  if (kc === 404 || kc === 50) {
+    if (isAppWindowOpen) {
+      toggleBrowserFullscreen();
+      return;
+    }
+  }
+
+  // WORKSPACE HOTKEYS
+  if (kc === 403 || kc === 49) { switchWorkspace(1); return; }
+  if (kc === 404 || kc === 50) { switchWorkspace(2); return; }
+  if (kc === 405 || kc === 51) { switchWorkspace(3); return; }
+  if (kc === 406 || kc === 52) { switchWorkspace(4); return; }
+  if (kc === 48) { cycleTheme(); return; }
+
+  // WHEN BROWSER OVERLAY IS OPEN:
+  if (isAppWindowOpen) {
+    if (!isBrowserFullscreen) {
+      var inItems = getVisibleInAppItems();
+      if (kc === 37 || kc === 38) {
+        if (inItems.length > 0) {
+          inAppNavIndex = (inAppNavIndex - 1 + inItems.length) % inItems.length;
+          updateInAppButtonSelection();
+        }
+      } else if (kc === 39 || kc === 40) {
+        if (inItems.length > 0) {
+          inAppNavIndex = (inAppNavIndex + 1) % inItems.length;
+          updateInAppButtonSelection();
+        }
+      } else if (kc === 13) {
+        if (inItems[inAppNavIndex]) {
+          inItems[inAppNavIndex].click();
+        }
+      }
+    }
+    return;
+  }
+
+  // DESKTOP WORKSPACE NAVIGATION
+  var items = getVisibleNavItems();
+  if (kc === 37 || kc === 38) {
+    if (items.length > 0) {
+      navIndex = (navIndex - 1 + items.length) % items.length;
+      updateButtonSelection();
+    }
+  } else if (kc === 39 || kc === 40) {
+    if (items.length > 0) {
+      navIndex = (navIndex + 1) % items.length;
+      updateButtonSelection();
+    }
+  } else if (kc === 13) {
+    if (items[navIndex]) {
+      items[navIndex].click();
+    }
+  }
+}
+window.handleKeycodeDirect = handleKeycodeDirect;
+
+function handleRemoteCommand(data) {
+  if (!data) return;
+  if (data.type === "key") {
+    handleKeycodeDirect(data.keyCode);
+  } else if (data.type === "action") {
+    if (data.action === "screen_split") toggleDualScreen(true);
+    else if (data.action === "screen_single") toggleDualScreen(false);
+    else if (data.action === "screen_pip") togglePipMode();
+    else if (data.action === "screen_swap") swapDualScreens();
+    else if (data.action === "cast_mac") browseTo("/cast_view", "Mac Extended Screen", true);
+  } else if (data.type === "launch" || data.type === "browse") {
+    browseTo(data.url, data.title || data.url);
+  } else if (data.type === "hal") {
+    if (data.param === "brightness") setLiveBrightness(data.val);
+    else if (data.param === "brightness_preset") setLiveBrightnessPreset(data.val);
+    else if (data.param === "volume") adjustVolume(data.val);
+    else if (data.param === "mute") toggleMute();
+  }
+}
+window.handleRemoteCommand = handleRemoteCommand;
+
 // REAL REMOTE CONTROL KEYLOGGER & D-PAD CONTROLLER
 window.addEventListener("keydown", function(e) {
+  var kc = e.keyCode || e.which;
+  handleKeycodeDirect(kc);
+
   var kc = e.keyCode || e.which;
 
   var kbox = document.getElementById("key-sniffer-box");
@@ -1571,11 +1692,11 @@ setInterval(function() {
     document.getElementById("wb-rtt").textContent = "OFFLINE";
   };
   xhr.send();
-}, 2000);
+}, 1000);
 
 window.addEventListener("load", function() {
   try {
-    var saved = localStorage.getItem("omarchy_theme_v8");
+    var saved = localStorage.getItem("omarchy_theme_v9");
     if (saved) {
       var idx = THEMES.indexOf(saved);
       if (idx !== -1) currentThemeIdx = idx;
@@ -1599,13 +1720,58 @@ class ReusableThreadingHTTPServer(http.server.ThreadingHTTPServer):
     allow_reuse_address = True
 
 class OmarchyHandler(http.server.BaseHTTPRequestHandler):
-    def do_HEAD(self):
-        self.send_response(200)
-        self.send_header("Content-Type", "text/html; charset=utf-8")
-        self.end_headers()
-
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
+
+        if parsed.path in ("/cast", "/cast.html"):
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            if CAST_FILE.exists():
+                self.wfile.write(CAST_FILE.read_bytes())
+            else:
+                self.wfile.write(b"<h1>Cast not found</h1>")
+            return
+
+        if parsed.path in ("/cast_view", "/cast_view.html"):
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            if CAST_VIEW_FILE.exists():
+                self.wfile.write(CAST_VIEW_FILE.read_bytes())
+            else:
+                self.wfile.write(b"<h1>Cast View not found</h1>")
+            return
+
+        if parsed.path == "/api/cast_frame":
+            global LATEST_CAST_FRAME
+            if LATEST_CAST_FRAME:
+                self.send_response(200)
+                self.send_header("Content-Type", "image/jpeg")
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                self.wfile.write(LATEST_CAST_FRAME)
+            else:
+                self.send_response(204)
+                self.end_headers()
+            return
+
+        if parsed.path == "/api/webrtc_signal":
+            q = urllib.parse.parse_qs(parsed.query)
+            t = q.get("type", [""])[0]
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            if t == "offer":
+                self.wfile.write(json.dumps(WEBRTC_SIGNALS["offer"] or {}).encode("utf-8"))
+            elif t == "answer":
+                self.wfile.write(json.dumps(WEBRTC_SIGNALS["answer"] or {}).encode("utf-8"))
+            else:
+                self.wfile.write(json.dumps(WEBRTC_SIGNALS).encode("utf-8"))
+            return
 
         if parsed.path in ("/remote", "/remote.html"):
             self.send_response(200)
@@ -1666,28 +1832,62 @@ class OmarchyHandler(http.server.BaseHTTPRequestHandler):
         length = int(self.headers.get("Content-Length", 0))
         raw = self.rfile.read(length).decode("utf-8", errors="replace")
 
+        if self.path == "/api/cast_frame":
+            global LATEST_CAST_FRAME
+            try:
+                if raw.startswith("data:image"):
+                    import base64
+                    header, b64data = raw.split(",", 1)
+                    LATEST_CAST_FRAME = base64.b64decode(b64data)
+                else:
+                    LATEST_CAST_FRAME = raw.encode("utf-8")
+                self.send_response(200)
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(b'{"ok":true}')
+                return
+            except Exception as e:
+                self.send_response(500)
+                self.end_headers()
+                return
+
+        if self.path.startswith("/api/webrtc_signal"):
+            try:
+                data = json.loads(raw)
+                q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+                t = q.get("type", [""])[0]
+                if t == "offer":
+                    WEBRTC_SIGNALS["offer"] = data
+                elif t == "answer":
+                    WEBRTC_SIGNALS["answer"] = data
+                elif t == "candidate":
+                    WEBRTC_SIGNALS["candidates"].append(data)
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(b'{"ok":true}')
+                return
+            except Exception as e:
+                self.send_response(500)
+                self.end_headers()
+                return
+
         if self.path == "/api/remote_command":
             try:
                 data = json.loads(raw)
                 js = ""
                 if data.get("type") == "key":
-                    js = f"window.dispatchEvent(new KeyboardEvent('keydown', { keyCode: {data.get('keyCode')}, bubbles: true }))"
+                    kc = data.get("keyCode")
+                    js = f"(window.handleKeycodeDirect ? window.handleKeycodeDirect({kc}) : window.dispatchEvent(new KeyboardEvent('keydown', {{ 'keyCode': {kc}, 'bubbles': true }})))"
                 elif data.get("type") == "action":
-                    act = data.get("action")
-                    if act == "screen_split": js = "toggleDualScreen(true)"
-                    elif act == "screen_single": js = "toggleDualScreen(false)"
-                    elif act == "screen_pip": js = "togglePipMode()"
+                    js = f"(window.handleRemoteCommand ? window.handleRemoteCommand({json.dumps(data)}) : null)"
                 elif data.get("type") in ("launch", "browse"):
                     u = data.get("url", "")
                     t = data.get("title", u)
-                    js = f"browseTo({json.dumps(u)}, {json.dumps(t)})"
+                    js = f"(window.browseTo ? window.browseTo({json.dumps(u)}, {json.dumps(t)}) : null)"
                 elif data.get("type") == "hal":
-                    p = data.get("param")
-                    v = data.get("val")
-                    if p == "brightness": js = f"setLiveBrightness({v})"
-                    elif p == "brightness_preset": js = f"setLiveBrightnessPreset({v})"
-                    elif p == "volume": js = f"adjustVolume({v})"
-                    elif p == "mute": js = "toggleMute()"
+                    js = f"(window.handleRemoteCommand ? window.handleRemoteCommand({json.dumps(data)}) : null)"
 
                 if js:
                     cmd_obj = {"id": int(datetime.datetime.now().timestamp() * 1000), "js": js}
@@ -1747,5 +1947,5 @@ class OmarchyHandler(http.server.BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     server = ReusableThreadingHTTPServer(("0.0.0.0", PORT), OmarchyHandler)
-    print(f"=== OMARCHY TV OS SERVER v8.0 ON 0.0.0.0:{PORT} ===")
+    print(f"=== OMARCHY TV OS SERVER v9.0 ON 0.0.0.0:{PORT} ===")
     server.serve_forever()
