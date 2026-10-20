@@ -1599,6 +1599,11 @@ class ReusableThreadingHTTPServer(http.server.ThreadingHTTPServer):
     allow_reuse_address = True
 
 class OmarchyHandler(http.server.BaseHTTPRequestHandler):
+    def do_HEAD(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.end_headers()
+
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
 
