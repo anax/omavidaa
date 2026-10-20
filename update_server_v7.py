@@ -335,6 +335,7 @@ CODE = r'''<!DOCTYPE html>
     </div>
     <div class="browser-bookmarks-row">
       <span style="color:var(--muted);font-size:11px;margin-right:4px;">QUICK:</span>
+      <button class="nav-btn inapp-ctrl-btn" onclick="browseTo('https://fis.com.mv', 'Flight Info (FIS)')">✈️ Flight Info (FIS)</button>
       <button class="nav-btn inapp-ctrl-btn" onclick="browseTo('https://www.youtube.com/tv', 'YouTube TV (4K Leanback)')">📺 YouTube TV</button>
       <button class="nav-btn inapp-ctrl-btn" onclick="browseTo('https://m.youtube.com', 'YouTube Web')">▶ YouTube Web</button>
       <button class="nav-btn inapp-ctrl-btn" onclick="browseTo('https://www.google.com', 'Google Search')">🔍 Google</button>
@@ -400,8 +401,8 @@ CODE = r'''<!DOCTYPE html>
         <div class="hero-desc">Official Smart TV interface engineered for remote D-Pad navigation, spatial audio, and borderless fullscreen viewing on your 65" panel.</div>
         <div class="hero-actions">
           <button class="nav-btn selected" onclick="browseTo('https://www.youtube.com/tv', 'YouTube TV', true)">▶ Launch 4K Fullscreen</button>
-          <button class="nav-btn" onclick="browseTo('https://www.youtube-nocookie.com/embed/jfKfPfyJRdk?autoplay=1', 'Lofi Radio 24/7', true)">☕ Lofi Hip Hop 24/7</button>
-          <button class="nav-btn" onclick="browseTo('https://www.youtube-nocookie.com/embed/1la40WSp10U?autoplay=1', '4K Nature', true)">🌲 4K Nature HDR</button>
+          <button class="nav-btn" onclick="browseTo('https://fis.com.mv', 'Flight Info (FIS)')">✈️ Flight Info (FIS)</button>
+          <button class="nav-btn" onclick="browseTo('https://www.youtube-nocookie.com/embed/jfKfPfyJRdk?autoplay=1', 'Lofi Radio 24/7', true)">☕ Lofi Hip Hop</button>
           <button class="nav-btn" onclick="browseTo('https://www.google.com', 'Google Search')">🔍 Search Web</button>
         </div>
       </div>
@@ -634,6 +635,7 @@ var gpuHistory = new Array(28).fill(16.6);
 var liveState = { volume: 0, brightness: 0, contrast: 0, mute: 0 };
 
 var DEFAULT_APPS = [
+  { name: "Flight Info (FIS)", desc: "Velana Airport Flights", icon: "✈️", badge: "AIRPORT", url: "https://fis.com.mv" },
   { name: "YouTube TV", desc: "4K Leanback UI", icon: "📺", badge: "4K HDR", url: "https://www.youtube.com/tv" },
   { name: "YouTube Web", desc: "Browse & Search", icon: "▶", badge: "WEB", url: "https://m.youtube.com" },
   { name: "Google Search", desc: "Web Search", icon: "🔍", badge: "SEARCH", url: "https://www.google.com" },
@@ -643,7 +645,6 @@ var DEFAULT_APPS = [
   { name: "Reddit", desc: "Frontpage", icon: "👽", badge: "FORUM", url: "https://old.reddit.com" },
   { name: "Plex TV", desc: "Media Server", icon: "🎥", badge: "MEDIA", url: "https://app.plex.tv/desktop" },
   { name: "4K Cinema", desc: "Tears of Steel", icon: "🎬", badge: "FILM", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" },
-  { name: "Big Buck Bunny", desc: "Blender 4K", icon: "🐰", badge: "ANIM", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" },
   { name: "Live Broadcast", desc: "TV Tuner", icon: "📡", badge: "DVB-T2", action: "live_tv" },
   { name: "HAL Controls", desc: "Hardware Write", icon: "⚙️", badge: "SYSTEM", action: "ws_4" }
 ];
@@ -887,7 +888,14 @@ function launchDockApp(idx) {
 function getSavedApps() {
   try {
     var r = localStorage.getItem("omarchy_apps_v7");
-    if (r) return JSON.parse(r);
+    if (r) {
+      var parsed = JSON.parse(r);
+      if (!parsed.some(a => a.url && a.url.includes("fis.com.mv"))) {
+        parsed.unshift({ name: "Flight Info (FIS)", desc: "Velana Airport Flights", icon: "✈️", badge: "AIRPORT", url: "https://fis.com.mv" });
+        try { localStorage.setItem("omarchy_apps_v7", JSON.stringify(parsed)); } catch(e) {}
+      }
+      return parsed;
+    }
   } catch (e) {}
   return DEFAULT_APPS.slice();
 }
