@@ -46,7 +46,7 @@ def main():
     # 1. Official VIDAA App Manifest: appinfo.json
     appinfo = {
         "id": "org.omarchy.tvos",
-        "version": "7.0.0",
+        "version": "8.0.0",
         "vendor": "Omarchy",
         "type": "web",
         "main": "index.html",

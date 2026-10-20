@@ -22,6 +22,14 @@
   ],
   "rewrites": [
     {
+      "source": "/remote",
+      "destination": "/remote.html"
+    },
+    {
+      "source": "/api/remote_command",
+      "destination": "/api/remote_command"
+    },
+    {
       "source": "/poll_cmd",
       "destination": "/api/poll_cmd"
     },

@@ -56,3 +56,6 @@
 {"id": 504, "result": {"isOpen": false, "isFullscreen": false}}
 {"id": 505, "result": {"isOpen": true, "isFullscreen": false, "frameSrc": "https://m.youtube.com/"}}
 {"id": 506, "result": {"isOpen": false}}
+{"id": 600}
+{"id": 601, "result": {"url": "http://localhost:8765/", "title": "OMARCHY TV OS // FULLSCREEN WEB BROWSER", "heroExists": false, "ambientCanvasExists": false, "sparklineExists": false, "pulseText": null, "appsCount": 9, "apps": ["YouTube TV", "YouTube Web", "Google Search", "Wikipedia", "Twitch", "Hacker News", "Reddit", "Live Broadcast", "fis.com.mv"]}}
+{"id": 602, "result": {}}
