@@ -320,6 +320,101 @@
     position: relative; overflow: hidden;
   }
   video, #oipf-broadcast-container { width: 100%; height: 100%; }
+
+  /* CLEAN HOME STYLING */
+  #ws-1 {
+    grid-template-columns: 1fr !important;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    height: calc(100vh - 58px);
+  }
+  .home-tile {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(18, 19, 26, 0.82);
+    backdrop-filter: blur(20px);
+    border-radius: 14px;
+    overflow-y: auto;
+  }
+  .home-body {
+    padding: 20px 24px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .clean-hero {
+    background: linear-gradient(135deg, rgba(122, 162, 247, 0.12) 0%, rgba(187, 154, 247, 0.05) 45%, rgba(17, 18, 25, 0.95) 100%) !important;
+    border: 1.5px solid rgba(122, 162, 247, 0.35) !important;
+    border-radius: 12px !important;
+    padding: 20px 24px !important;
+    margin-bottom: 4px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
+  }
+  .clean-hero .hero-title {
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.3px;
+    margin-bottom: 6px !important;
+  }
+  .clean-hero .hero-desc {
+    font-size: 13px !important;
+    max-width: 85% !important;
+    line-height: 1.5 !important;
+    margin-bottom: 14px !important;
+  }
+  .app-shelf-header {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+  .clean-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 12px !important;
+    margin-bottom: 6px !important;
+  }
+  .clean-grid .app-card {
+    min-height: 84px !important;
+    padding: 12px 14px !important;
+    background: rgba(26, 27, 38, 0.75) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 10px !important;
+  }
+  .clean-grid .app-card:hover, .clean-grid .app-card.selected, .clean-grid .app-card:focus {
+    border-color: var(--accent) !important;
+    background: rgba(122, 162, 247, 0.18) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(122, 162, 247, 0.25) !important;
+  }
+  .clean-grid .app-card .app-name {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+  }
+  .clean-grid .app-card .app-desc {
+    font-size: 11px !important;
+    margin-top: 2px !important;
+  }
+  .clean-search-card {
+    background: rgba(17, 18, 26, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px;
+    margin-top: 2px;
+  }
+  .clean-input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.35) !important;
+    border: 1px solid var(--border) !important;
+    padding: 10px 16px !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    color: var(--fg) !important;
+  }
+  .clean-input:focus {
+    border-color: var(--accent) !important;
+  }
+
 </style>
 </head>
 <body data-theme="tokyonight">
@@ -410,143 +505,82 @@
   </div>
 </div>
 
-<!-- TOP WAYBAR -->
+<!-- CLEAN TOP HEADER -->
 <div class="waybar">
   <div class="wb-left">
-    <div class="distro-pill">OMARCHY LIVE</div>
+    <div class="distro-pill">OMARCHY TV</div>
     <div class="ws-btn active" id="wb-ws-1" onclick="switchWorkspace(1)">
-      <span class="dot dot-red"></span> 1:DOCK
+      <span class="dot dot-red"></span> Apps
     </div>
     <div class="ws-btn" id="wb-ws-2" onclick="switchWorkspace(2)">
-      <span class="dot dot-green"></span> 2:MEDIA &amp; TV
+      <span class="dot dot-green"></span> Media &amp; TV
     </div>
     <div class="ws-btn" id="wb-ws-3" onclick="switchWorkspace(3)">
-      <span class="dot dot-yellow"></span> 3:SYSTEM
-    </div>
-    <div class="ws-btn" id="wb-ws-4" onclick="switchWorkspace(4)">
-      <span class="dot dot-blue"></span> 4:HAL WRITE
+      <span class="dot dot-yellow"></span> System
     </div>
   </div>
 
   <div class="wb-center">
-    <button class="ws-btn" onclick="openRemoteQrModal()" style="border-color:var(--cyan);color:var(--cyan);">
-      <span>📱</span> Mobile Remote (QR)
+    <button class="ws-btn" onclick="browseTo('https://fis.com.mv', 'Flight Info (FIS)')" style="border-color:var(--accent);color:var(--cyan);">
+      <span>✈️</span> Flight Info
     </button>
     <button class="ws-btn" onclick="toggleDualScreen()" style="border-color:var(--amber);color:var(--amber);">
-      <span>🪟</span> Dual Split 50/50
+      <span>🪟</span> 50/50 Split
     </button>
-    <div class="stat-pill"><span id="wb-live-model">CONNECTING...</span> // <b id="wb-theme-name">TOKYO NIGHT</b></div>
+    <button class="ws-btn" onclick="browseTo('/cast_view', 'Mac Screen Cast', true)" style="border-color:var(--cyan);color:var(--cyan);">
+      <span>🖥️</span> Mac Cast
+    </button>
+    <button class="ws-btn" onclick="openRemoteQrModal()" style="border-color:var(--green);color:var(--green);">
+      <span>📱</span> Phone Remote
+    </button>
   </div>
 
   <div class="wb-right">
-    <div class="stat-pill">VOL <b id="wb-vol">--</b></div>
-    <div class="stat-pill">BRI <b id="wb-bri">--</b></div>
-    <div class="stat-pill">CON <b id="wb-con">--</b></div>
-    <div class="stat-pill">RTT <b id="wb-rtt">-- ms</b></div>
-    <div class="stat-pill"><b id="wb-clock">--:--:--</b></div>
+    <div class="stat-pill" style="display:none;" id="wb-vol"></div>
+    <div class="stat-pill" style="display:none;" id="wb-bri"></div>
+    <div class="stat-pill" style="display:none;" id="wb-con"></div>
+    <div class="stat-pill" style="display:none;" id="wb-live-model"></div>
+    <div class="stat-pill" style="display:none;" id="wb-theme-name"></div>
+    <div class="stat-pill"><span class="dot dot-green" style="margin-right:4px;"></span> <span id="wb-rtt">-- ms</span></div>
+    <div class="stat-pill" style="font-weight:700;"><b id="wb-clock">--:--:--</b></div>
   </div>
 </div>
 
-<!-- WORKSPACE 1: WALKER APP DOCK (CINEMATIC LIVING HOME) -->
+<!-- WORKSPACE 1: CLEAN CINEMATIC HOME DASHBOARD -->
 <div class="workspace active" id="ws-1">
-  <div class="tile focused">
-    <div class="tile-bar">
-      <span>walker // Application Launcher &amp; Living Dashboard</span>
-      <span>[D-PAD + ENTER]</span>
-    </div>
-    <div class="tile-body">
-      <!-- HERO SHOWCASE CARD -->
-      <div class="hero-card">
-        <div class="hero-tag">FEATURED // 4K HDR 60FPS</div>
-        <div class="hero-title">YouTube TV &bull; Leanback 4K Cinema</div>
-        <div class="hero-desc">Official Smart TV interface engineered for remote D-Pad navigation, spatial audio, and borderless fullscreen viewing on your 65" panel.</div>
+  <div class="tile focused home-tile">
+    <div class="tile-body home-body">
+
+      <!-- CLEAN HERO SPOTLIGHT CARD -->
+      <div class="hero-card clean-hero">
+        <div class="hero-tag">MALDIVES &bull; 4K CINEMA</div>
+        <div class="hero-title">Velana International Airport &bull; Live Flight Info &amp; 4K Leanback Cinema</div>
+        <div class="hero-desc">Monitor live arrivals and departures on <b>fis.com.mv</b>, stream 4K cinema on <b>YouTube TV</b>, cast your <b>Mac Screen</b>, or browse the web in 50/50 Dual Split.</div>
         <div class="hero-actions">
-          <button class="nav-btn selected" onclick="browseTo('https://www.youtube.com/tv', 'YouTube TV', true)">▶ Launch 4K Fullscreen</button>
-          <button class="nav-btn" onclick="browseTo('https://fis.com.mv', 'Flight Info (FIS)')">✈️ Flight Info (FIS)</button>
-          <button class="nav-btn" onclick="toggleDualScreen(true)">🪟 Dual Split (FIS + YouTube)</button>
+          <button class="nav-btn selected" onclick="browseTo('https://fis.com.mv', 'Flight Info (FIS)')">✈️ Open Flight Info (FIS)</button>
+          <button class="nav-btn" onclick="browseTo('https://www.youtube.com/tv', 'YouTube TV', true)">▶ YouTube TV 4K</button>
+          <button class="nav-btn" onclick="toggleDualScreen(true)">🪟 50/50 Dual Split (Flight + YouTube)</button>
           <button class="nav-btn" onclick="browseTo('/cast_view', 'Mac Extended Screen', true)">🖥️ Cast Mac Screen</button>
           <button class="nav-btn" onclick="openRemoteQrModal()">📱 Phone Remote QR</button>
         </div>
       </div>
 
-      <!-- 12 APP LAUNCHER CARDS -->
-      <div class="app-grid" id="app-dock-grid"></div>
-
-      <!-- LIVE PULSE BREAKING TICKER -->
-      <div class="pulse-ticker">
-        <div class="pulse-dot"></div>
-        <div class="pulse-text" id="pulse-text">Loading live tech pulse from Hacker News...</div>
+      <!-- CLEAN 8-APP SHELF -->
+      <div class="app-shelf-header">
+        <span>FEATURED APPLICATIONS &bull; PRESS D-PAD TO NAVIGATE</span>
       </div>
+      <div class="app-grid clean-grid" id="app-dock-grid"></div>
 
-      <!-- QUICK URL LAUNCH BAR -->
-      <div class="hw-card" style="margin-top:10px;">
-        <div class="hw-card-title">QUICK WEB NAVIGATOR</div>
-        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;">
-          <input id="custom-app-url" class="input-box" style="flex:1;min-width:260px;" placeholder="Enter any URL or search keywords" value="https://fis.com.mv" onclick="Hisense_enableVKB && Hisense_enableVKB()">
+      <!-- MINIMAL WEB SEARCH & URL NAVIGATOR -->
+      <div class="clean-search-card">
+        <div style="display:flex;align-items:center;gap:10px;width:100%;">
+          <span style="font-size:16px;">🔍</span>
+          <input id="custom-app-url" class="input-box clean-input" placeholder="Type any website address or search keywords (e.g. google.com)..." value="https://fis.com.mv" onclick="Hisense_enableVKB && Hisense_enableVKB()">
           <button class="nav-btn" onclick="launchCustomUrl()">Browse</button>
           <button class="nav-btn" onclick="addCustomPin()">+ Pin Card</button>
-          <button class="nav-btn" onclick="resetCustomApps()">Reset</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="tile">
-    <div class="tile-bar">
-      <span>telemetry // Extended Screen &amp; Remote Control</span>
-      <span>[LIVE SENSORS]</span>
-    </div>
-    <div class="tile-body">
-      <div class="fastfetch">
-        <div class="ascii-logo">      /\
-     /  \
-    /\   \
-   /  ,,  \
-  /  |  | -\
- /_-''  ''-_\</div>
-        <div class="specs-list" id="live-specs-list">
-          <div><b>Host:</b> <span id="spec-host">Querying...</span></div>
-          <div><b>SoC / Chip:</b> <span id="spec-chip">Querying...</span></div>
-          <div><b>GPU:</b> <span id="spec-gpu">Querying...</span></div>
-          <div><b>OS / Build:</b> <span id="spec-os">Querying...</span></div>
-          <div><b>Firmware:</b> <span id="spec-fw">Querying...</span></div>
-          <div><b>Resolution:</b> <span id="spec-res">Querying...</span></div>
-          <div><b>IP Address:</b> <span id="spec-ip">Querying...</span></div>
-          <div><b>Ad Target:</b> <span id="spec-ad">Querying...</span></div>
         </div>
       </div>
 
-      <!-- EXTENDED SCREEN CONTROLS -->
-      <div class="hw-card">
-        <div class="hw-card-title">EXTENDED SCREEN &amp; TILING</div>
-        <button class="nav-btn" onclick="toggleDualScreen()">🪟 Toggle 50/50 Dual Screen</button>
-        <button class="nav-btn" onclick="togglePipMode()">🖼️ Toggle Floating PiP</button>
-        <button class="nav-btn" onclick="openRemoteQrModal()">📱 Connect Phone Remote</button>
-      </div>
-
-      <!-- LIVE GPU LATENCY OSCILLOSCOPE GRAPH -->
-      <div class="hw-card">
-        <div class="hw-card-title">MALI-G52 GPU RENDER OSCILLOSCOPE (60 FPS)</div>
-        <canvas id="gpu-canvas-graph" width="280" height="44"></canvas>
-        <div class="meter-row">
-          <div class="meter-label"><span>Render Latency (WebGL)</span><span id="gpu-frame-txt">-- ms</span></div>
-          <div class="meter-track"><div class="meter-fill" id="gpu-frame-bar" style="width:0%"></div></div>
-        </div>
-        <div class="meter-row">
-          <div class="meter-label"><span>JS Heap Memory (V8)</span><span id="mem-heap-txt">-- MB</span></div>
-          <div class="meter-track"><div class="meter-fill" id="mem-heap-bar" style="width:0%"></div></div>
-        </div>
-      </div>
-
-      <!-- QUICK HARDWARE PRESETS -->
-      <div class="hw-card">
-        <div class="hw-card-title">PANEL PRESETS (vowOS HAL)</div>
-        <button class="nav-btn" onclick="setLiveBrightnessPreset(80)">Day 80%</button>
-        <button class="nav-btn" onclick="setLiveBrightnessPreset(50)">Cinema 50%</button>
-        <button class="nav-btn" onclick="setLiveBrightnessPreset(25)">Night 25%</button>
-        <button class="nav-btn" onclick="toggleMute()">Mute</button>
-        <button class="nav-btn" onclick="cycleTheme()">Theme (0)</button>
-      </div>
     </div>
   </div>
 </div>
@@ -590,36 +624,65 @@
   </div>
 </div>
 
-<!-- WORKSPACE 3: REAL GHOSTTY TERMINAL & REAL HARDWARE METRICS -->
+<!-- WORKSPACE 3: REAL GHOSTTY TERMINAL & HARDWARE TELEMETRY -->
 <div class="workspace" id="ws-3">
   <div class="tile focused">
     <div class="tile-bar">
-      <span>ghostty // Interactive Host &amp; Phoenix Shell</span>
+      <span>ghostty // Interactive Terminal &amp; Diagnostic Shell</span>
       <span>[LIVE EXEC]</span>
     </div>
     <div class="tile-body">
-      <div style="margin-bottom:6px;color:var(--cyan);font-size:12px;">EXECUTE COMMANDS:</div>
-      <div>
+      <div style="margin-bottom:8px;color:var(--cyan);font-size:12px;">EXECUTE SYSTEM COMMANDS:</div>
+      <div style="margin-bottom:10px;">
         <button class="nav-btn" onclick="runLiveHostCmd('uname')">Mac: uname -a</button>
         <button class="nav-btn" onclick="runLiveHostCmd('uptime')">Mac: uptime</button>
         <button class="nav-btn" onclick="runLiveHostCmd('df')">Mac: df -h</button>
         <button class="nav-btn" onclick="runLiveHostCmd('ls_workspace')">Mac: ls VIDAA</button>
-        <button class="nav-btn" onclick="fetchLivePackages()">TV: Query Installed Packages</button>
-        <button class="nav-btn" onclick="dumpLiveSensors()">TV: Query All Native Bridges</button>
+        <button class="nav-btn" onclick="fetchLivePackages()">TV: Installed Packages</button>
+        <button class="nav-btn" onclick="dumpLiveSensors()">TV: Query Sensors</button>
       </div>
-      <div class="term-out" id="term-output" style="height:350px;">[omarchy@vidaa ~]$ Ready for live execution. Select a command above.</div>
+      <div class="term-out" id="term-output" style="height:320px;">[omarchy@vidaa ~]$ Ready for live execution. Select a command above.</div>
     </div>
   </div>
 
   <div class="tile">
     <div class="tile-bar">
-      <span>btop // Live Telemetry &amp; Remote Key Sniffer</span>
+      <span>telemetry // TV Hardware Specs &amp; Remote Key Sniffer</span>
       <span>[REAL TIMING]</span>
     </div>
     <div class="tile-body">
+      <!-- SYSTEM SPECS -->
+      <div class="hw-card" style="margin-bottom:10px;">
+        <div class="hw-card-title">DEVICE HARDWARE TELEMETRY</div>
+        <div class="specs-list" id="live-specs-list" style="font-size:11px;line-height:1.6;">
+          <div><b>Host:</b> <span id="spec-host">Querying...</span></div>
+          <div><b>SoC / Chip:</b> <span id="spec-chip">Querying...</span></div>
+          <div><b>GPU:</b> <span id="spec-gpu">Querying...</span></div>
+          <div><b>OS / Build:</b> <span id="spec-os">Querying...</span></div>
+          <div><b>Firmware:</b> <span id="spec-fw">Querying...</span></div>
+          <div><b>Resolution:</b> <span id="spec-res">Querying...</span></div>
+          <div><b>IP Address:</b> <span id="spec-ip">Querying...</span></div>
+        </div>
+      </div>
+
+      <!-- GPU RENDER OSCILLOSCOPE -->
+      <div class="hw-card" style="margin-bottom:10px;">
+        <div class="hw-card-title">MALI-G52 GPU RENDER LATENCY (60 FPS)</div>
+        <canvas id="gpu-canvas-graph" width="280" height="36"></canvas>
+        <div class="meter-row" style="margin-top:6px;">
+          <div class="meter-label"><span>Render Latency</span><span id="gpu-frame-txt">-- ms</span></div>
+          <div class="meter-track"><div class="meter-fill" id="gpu-frame-bar" style="width:0%"></div></div>
+        </div>
+        <div class="meter-row" style="margin-top:6px;">
+          <div class="meter-label"><span>JS Heap Memory</span><span id="mem-heap-txt">-- MB</span></div>
+          <div class="meter-track"><div class="meter-fill" id="mem-heap-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <!-- REMOTE KEY LOGGER -->
       <div class="hw-card">
-        <div class="hw-card-title">REMOTE KEY SNIFFER (LIVE TV CODES)</div>
-        <div class="term-out" id="key-sniffer-box" style="height:280px;">Press any TV remote button to sniff keyCode...</div>
+        <div class="hw-card-title">REMOTE KEY SNIFFER</div>
+        <div class="term-out" id="key-sniffer-box" style="height:110px;font-size:11px;">Press any remote key to inspect...</div>
       </div>
     </div>
   </div>
