@@ -9,3 +9,11 @@ cmd_queue.json
 
 # Logs
 *.log
+probe/results*.json*
+probe/*.log
+# Firmware packages and dumps (large binaries)
+firmware/
+/firmware/
+*.pkg
+*.7z
+*.bin
