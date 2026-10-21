@@ -415,6 +415,47 @@
     font-size: 11px !important;
     border-radius: 5px !important;
   }
+
+  /* HERO SHOWCASE SLIDER */
+  .clean-hero { position: relative; }
+  .hero-slide { display: none; }
+  .hero-slide.active {
+    display: block;
+    animation: hero-slide-in 0.45s ease-out;
+  }
+  @keyframes hero-slide-in {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-dots {
+    position: absolute; top: 12px; right: 14px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .hero-dot {
+    width: 16px; height: 6px; padding: 0; border: none;
+    border-radius: 3px; cursor: pointer;
+    background: rgba(255, 255, 255, 0.16);
+    transition: background 0.25s ease, box-shadow 0.25s ease;
+  }
+  .hero-dot.selected, .hero-dot:focus {
+    background: var(--accent);
+    box-shadow: 0 0 10px rgba(122, 162, 247, 0.55);
+    outline: none;
+  }
+  .hero-progress {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+    background: rgba(255, 255, 255, 0.05); overflow: hidden;
+  }
+  .hero-progress-fill {
+    height: 100%; width: 0%; opacity: 0.85;
+    background: linear-gradient(90deg, var(--accent), var(--cyan));
+  }
+  /* Keep 7s in sync with HERO_INTERVAL in the script below */
+  .hero-progress-fill.run { animation: hero-progress 7s linear forwards; }
+  @keyframes hero-progress {
+    from { width: 0%; }
+    to { width: 100%; }
+  }
   .app-shelf-header {
     font-size: 10px !important;
     font-weight: 700;
@@ -615,18 +656,50 @@
   <div class="tile focused home-tile">
     <div class="tile-body home-body">
 
-      <!-- CLEAN HERO SPOTLIGHT CARD -->
-      <div class="hero-card clean-hero">
-        <div class="hero-tag">MALDIVES &bull; 4K CINEMA</div>
-        <div class="hero-title">Velana International Airport &bull; Live Flight Info &amp; 4K Leanback Cinema</div>
-        <div class="hero-desc">Monitor live arrivals and departures on <b>fis.com.mv</b>, stream 4K cinema on <b>YouTube TV</b>, cast your <b>Mac Screen</b>, or browse the web in 50/50 Dual Split.</div>
-        <div class="hero-actions">
-          <button class="nav-btn selected" onclick="browseTo('https://fis.com.mv', 'Flight Info (FIS)')">✈️ Open Flight Info (FIS)</button>
-          <button class="nav-btn" onclick="browseTo('https://www.youtube.com/tv', 'YouTube TV', true)">▶ YouTube TV 4K</button>
-          <button class="nav-btn" onclick="toggleDualScreen(true)">🪟 50/50 Dual Split (Flight + YouTube)</button>
-          <button class="nav-btn" onclick="browseTo('/cast_view', 'Mac Extended Screen', true)">🖥️ Cast Mac Screen</button>
-          <button class="nav-btn" onclick="openRemoteQrModal()">📱 Phone Remote QR</button>
+      <!-- CLEAN HERO SPOTLIGHT SLIDER -->
+      <div class="hero-card clean-hero" id="hero-slider">
+        <div class="hero-slides">
+
+          <div class="hero-slide active">
+            <div class="hero-tag">✈️ MALDIVES &bull; LIVE FLIGHT INFO</div>
+            <div class="hero-title">Velana International Airport &bull; Live Arrivals &amp; Departures</div>
+            <div class="hero-desc">Monitor live <b>fis.com.mv</b> flight boards, then jump into 50/50 Dual Split with YouTube running alongside.</div>
+            <div class="hero-actions">
+              <button class="nav-btn selected" onclick="browseTo('https://fis.com.mv', 'Flight Info (FIS)')">✈️ Open Flight Info (FIS)</button>
+              <button class="nav-btn" onclick="toggleDualScreen(true)">🪟 50/50 Dual Split</button>
+              <button class="nav-btn" onclick="openRemoteQrModal()">📱 Phone Remote QR</button>
+            </div>
+          </div>
+
+          <div class="hero-slide">
+            <div class="hero-tag">🎬 4K CINEMA &bull; LEANBACK</div>
+            <div class="hero-title">YouTube TV &bull; True Borderless 4K Leanback Cinema</div>
+            <div class="hero-desc">The Smart TV interface built for the D-Pad — or open YouTube Web and hit <b>GREEN</b> for instant borderless fullscreen.</div>
+            <div class="hero-actions">
+              <button class="nav-btn" onclick="browseTo('https://www.youtube.com/tv', 'YouTube TV', true)">▶ YouTube TV 4K</button>
+              <button class="nav-btn" onclick="browseTo('https://www.youtube.com', 'YouTube Web', true)">🎬 YouTube Web</button>
+              <button class="nav-btn" onclick="toggleDualScreen(true)">🪟 Flight + Cinema Split</button>
+            </div>
+          </div>
+
+          <div class="hero-slide">
+            <div class="hero-tag">🖥️ MAC EXTENDED &bull; LIVE CAST</div>
+            <div class="hero-title">Cast your Mac Screen &bull; Real-Time 50/50 Dual View</div>
+            <div class="hero-desc">Stream your Mac display straight to the TV via <b>/cast_view</b>, or mirror this dashboard with the <b>Phone Remote</b>.</div>
+            <div class="hero-actions">
+              <button class="nav-btn" onclick="browseTo('/cast_view', 'Mac Extended Screen', true)">🖥️ Cast Mac Screen</button>
+              <button class="nav-btn" onclick="toggleDualScreen(true)">🪟 50/50 Dual Split</button>
+              <button class="nav-btn" onclick="openRemoteQrModal()">📱 Phone Remote QR</button>
+            </div>
+          </div>
+
         </div>
+        <div class="hero-dots">
+          <button class="hero-dot selected" onclick="heroGo(0)" title="Live Flights"></button>
+          <button class="hero-dot" onclick="heroGo(1)" title="4K Cinema"></button>
+          <button class="hero-dot" onclick="heroGo(2)" title="Mac Cast"></button>
+        </div>
+        <div class="hero-progress"><div class="hero-progress-fill" id="hero-progress-fill"></div></div>
       </div>
 
       <!-- CLEAN 8-APP SHELF -->
@@ -1328,8 +1401,7 @@ function toggleMute() {
 
 function logHal(msg) {
   var el = document.getElementById("hal-output");
-  if (el) el.textContent = "[" + new Date().toLocaleTimeString() + "] " + msg + "
-" + el.textContent;
+  if (el) el.textContent = "[" + new Date().toLocaleTimeString() + "] " + msg + "\n" + el.textContent;
 }
 
 function runLiveHostCmd(cmdName) {
@@ -1342,8 +1414,7 @@ function runLiveHostCmd(cmdName) {
     var dur = Math.round(performance.now() - t0);
     try {
       var res = JSON.parse(xhr.responseText);
-      logTerm("Host [" + cmdName + "] in " + dur + "ms:
-" + res.output);
+      logTerm("Host [" + cmdName + "] in " + dur + "ms:\n" + res.output);
     } catch (e) { logTerm("Error: " + e); }
   };
   xhr.send(JSON.stringify({ cmd: cmdName }));
@@ -1353,8 +1424,7 @@ function fetchLivePackages() {
   logTerm("Querying http://localhost:9009/service/pkgmgr -> getInstalledPkgs ...");
   try {
     var res = window.vowOS.store.getInstalledPkgs();
-    logTerm("LIVE INSTALLED PACKAGES:
-" + JSON.stringify(res, null, 2));
+    logTerm("LIVE INSTALLED PACKAGES:\n" + JSON.stringify(res, null, 2));
   } catch (e) { logTerm("Err: " + e); }
 }
 
@@ -1370,8 +1440,7 @@ function dumpLiveSensors() {
       brightness: window.vowOS && window.vowOS.tvinfo ? window.vowOS.tvinfo.getBrightness() : null,
       contrast: window.vowOS && window.vowOS.tvinfo ? window.vowOS.tvinfo.getContrast() : null
     };
-    logTerm("LIVE SENSOR DUMP:
-" + JSON.stringify(out, null, 2));
+    logTerm("LIVE SENSOR DUMP:\n" + JSON.stringify(out, null, 2));
   } catch (e) { logTerm("Err: " + e); }
 }
 
@@ -1380,16 +1449,13 @@ function callLiveRpc(service, api, args) {
   out.textContent = "Querying live http://localhost:9009/service/" + service + " (" + api + ")...";
   try {
     var res = window.vowOS.service.syncExecute(service, { api: api, args: args });
-    out.textContent = "POST http://localhost:9009/service/" + service + "
-" + JSON.stringify(res, null, 2);
+    out.textContent = "POST http://localhost:9009/service/" + service + "\n" + JSON.stringify(res, null, 2);
   } catch (e) { out.textContent = "RPC Error: " + e; }
 }
 
 function logTerm(msg) {
   var el = document.getElementById("term-output");
-  if (el) el.textContent = "[omarchy@vidaa ~]$ " + msg + "
-
-" + el.textContent;
+  if (el) el.textContent = "[omarchy@vidaa ~]$ " + msg + "\n\n" + el.textContent;
 }
 
 function bindLiveBroadcast() {
@@ -1450,9 +1516,7 @@ function toggleFullscreenVideo() {
 
 function logMedia(msg) {
   var el = document.getElementById("media-log");
-  if (el) el.textContent = "[" + new Date().toLocaleTimeString() + "] " + msg + "
-
-" + el.textContent;
+  if (el) el.textContent = "[" + new Date().toLocaleTimeString() + "] " + msg + "\n\n" + el.textContent;
 }
 
 function measureRealGpuFrame() {
@@ -1495,10 +1559,66 @@ function cycleTheme() {
   applyTheme(THEMES[currentThemeIdx]);
 }
 
+// HERO SHOWCASE SLIDER (auto-advance + D-Pad aware)
+var heroIdx = 0;
+var heroTimer = null;
+var HERO_INTERVAL = 7000; // keep in sync with .hero-progress-fill CSS animation
+
+function heroRender() {
+  var slider = document.getElementById("hero-slider");
+  if (!slider) return;
+  var slides = slider.querySelectorAll(".hero-slide");
+  var dots = slider.querySelectorAll(".hero-dot");
+  for (var i = 0; i < slides.length; i++) {
+    slides[i].classList.toggle("active", i === heroIdx);
+    if (dots[i]) dots[i].classList.toggle("selected", i === heroIdx);
+  }
+  // Restart the progress line in sync with the timer
+  var bar = document.getElementById("hero-progress-fill");
+  if (bar) {
+    bar.classList.remove("run");
+    void bar.offsetWidth; // force reflow to restart the CSS animation
+    bar.classList.add("run");
+  }
+  // If focus was lost on a now-hidden slide, snap selection back to the first button
+  var focused = document.activeElement;
+  if (slider.contains(focused) && (!focused.closest || !focused.closest(".hero-slide.active"))) {
+    navIndex = 0;
+    updateButtonSelection();
+  }
+}
+
+function heroGo(n) {
+  var slider = document.getElementById("hero-slider");
+  if (!slider) return;
+  var count = slider.querySelectorAll(".hero-slide").length;
+  if (count < 2) return;
+  heroIdx = ((n % count) + count) % count;
+  heroRender();
+}
+
+function heroNext() { heroGo(heroIdx + 1); }
+
+// Called on every remote keypress: pause the clock so a slide never
+// flips mid-interaction, then restart both timer and progress line together.
+function heroHold() {
+  if (heroTimer) {
+    clearInterval(heroTimer);
+    heroTimer = setInterval(heroNext, HERO_INTERVAL);
+  }
+  heroRender();
+}
+
+function heroStartAutoplay() {
+  if (heroTimer) clearInterval(heroTimer);
+  heroTimer = setInterval(heroNext, HERO_INTERVAL);
+  heroRender();
+}
+
 function getVisibleNavItems() {
   var ws = document.getElementById("ws-" + currentWorkspace);
   if (!ws) return [];
-  return Array.prototype.slice.call(ws.querySelectorAll(".hero-actions .nav-btn, .app-card, .hw-card .nav-btn"));
+  return Array.prototype.slice.call(ws.querySelectorAll(".hero-slide.active .nav-btn, .hero-dot, .app-card, .hw-card .nav-btn"));
 }
 
 function updateButtonSelection() {
@@ -1554,8 +1674,9 @@ function switchWorkspace(n) {
 
 function handleKeycodeDirect(kc) {
   var kbox = document.getElementById("key-sniffer-box");
-  if (kbox) kbox.textContent = "[" + new Date().toLocaleTimeString() + "] Remote: " + kc + "
-" + kbox.textContent.slice(0, 400);
+  if (kbox) kbox.textContent = "[" + new Date().toLocaleTimeString() + "] Remote: " + kc + "\n" + kbox.textContent.slice(0, 400);
+
+  heroHold(); // never let the hero slide flip while the user is navigating
 
   // REMOTE BACK BUTTON (461 / 8 / 27)
   if (kc === 461 || kc === 8 || kc === 27) {
@@ -1669,8 +1790,7 @@ window.addEventListener("keydown", function(e) {
   var kc = e.keyCode || e.which;
 
   var kbox = document.getElementById("key-sniffer-box");
-  if (kbox) kbox.textContent = "[" + new Date().toLocaleTimeString() + "] Key: " + e.key + " (keyCode=" + kc + ")
-" + kbox.textContent.slice(0, 400);
+  if (kbox) kbox.textContent = "[" + new Date().toLocaleTimeString() + "] Key: " + e.key + " (keyCode=" + kc + ")\n" + kbox.textContent.slice(0, 400);
 
   // REMOTE BACK BUTTON (461 / 8 / 27)
   if (kc === 461 || kc === 8 || kc === 27) {
@@ -1815,6 +1935,7 @@ window.addEventListener("load", function() {
   measureRealGpuFrame();
   updateLivePulseTicker();
   updateButtonSelection();
+  heroStartAutoplay();
 });
 </script>
 </body>
